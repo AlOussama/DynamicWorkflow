@@ -1,0 +1,36 @@
+┌ Info: 2025-03-16T11:49:39.120 [24496:1]: Pre-Initializing Simulation States
+└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:265
+┌ Info: 2025-03-16T11:49:39.120 [24496:1]: Unit System changed to UnitSystem.SYSTEM_BASE = 0
+└ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
+┌ Warning: 2025-03-16T11:49:39.123 [24496:1]: Unit DE0 1 lignite set at the limit 0.35041315316271926. Q_max = 0.35041315316271926 Q_min = -0.35041315316271926
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
+┌ Warning: 2025-03-16T11:49:39.124 [24496:1]: Unit DE0 1 biomass set at the limit 2.127848. Q_max = 2.127848 Q_min = -2.127848
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
+┌ Warning: 2025-03-16T11:49:39.124 [24496:1]: Unit DE0 1 ror set at the limit 0.030970000000000004. Q_max = 0.030970000000000004 Q_min = -0.030970000000000004
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:404
+┌ Warning: 2025-03-16T11:49:39.126 [24496:1]: Unit DE0 1 PHS set at the limit 4.8. Q_max = 4.8 Q_min = -4.8
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:404
+┌ Warning: 2025-03-16T11:49:39.126 [24496:1]: Maximum number of iterations for Q-redistribution reached. Number of devices at Q limit are: 4 of 6 available devices
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:415
+┌ Error: 2025-03-16T11:49:39.158 [24496:1]: ResidualModel failed to build
+│   exception = (AssertionError("[5, 6]"), Union{Ptr{Nothing}, Base.InterpreterIP}[Ptr{Nothing} @0x0000020923ef1d21, Ptr{Nothing} @0x0000020923ef277e, Ptr{Nothing} @0x0000020923e968cd, Ptr{Nothing} @0x0000020923e97040, Ptr{Nothing} @0x0000020923e97f09, Ptr{Nothing} @0x0000020923ea3296, Ptr{Nothing} @0x0000020923ea54d3, Ptr{Nothing} @0x0000020923ea9225, Ptr{Nothing} @0x0000020923eb35b2, Ptr{Nothing} @0x0000020923eb3e6d, Ptr{Nothing} @0x0000020923eb46dc, Ptr{Nothing} @0x0000020923eb48d3, Ptr{Nothing} @0x0000020923eb4939, Ptr{Nothing} @0x00007fff3435cc7a, Ptr{Nothing} @0x00007fff3435c774, Ptr{Nothing} @0x00007fff3435d3c0, Ptr{Nothing} @0x00007fff3435e31e, Base.InterpreterIP in top-level CodeInfo for Main at statement 6, Ptr{Nothing} @0x00007fff3437ae38, Ptr{Nothing} @0x00007fff3437b6bc, Ptr{Nothing} @0x00007fff3437c5b6, Ptr{Nothing} @0x00007fff1bda7869, Ptr{Nothing} @0x0000020910fb3713, Ptr{Nothing} @0x00007fff3434959b, Ptr{Nothing} @0x00007fff3434ba42, Ptr{Nothing} @0x00007fff1d41a5c7, Ptr{Nothing} @0x00007fff3434ba42, Ptr{Nothing} @0x00007fff1c032e3b, Ptr{Nothing} @0x00007fff3434ba42, Ptr{Nothing} @0x0000020933476b9b, Ptr{Nothing} @0x0000020933476c6c, Ptr{Nothing} @0x000002093347765b, Ptr{Nothing} @0x0000020933479e15, Ptr{Nothing} @0x000002093347b8ec, Ptr{Nothing} @0x000002093347bde5, Ptr{Nothing} @0x000002093347c7c3, Ptr{Nothing} @0x000002093347e07f, Ptr{Nothing} @0x000002093347e1db, Ptr{Nothing} @0x00007fff3434959b, Ptr{Nothing} @0x0000020910f95b6e, Ptr{Nothing} @0x0000020910f95bab, Ptr{Nothing} @0x00007fff3434ba42, Ptr{Nothing} @0x0000020910f61081, Ptr{Nothing} @0x0000020910f61304, Ptr{Nothing} @0x00007fff34362e03])
+└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:468
+┌ Info: 2025-03-16T11:49:39.179 [24496:1]: 
+│ ──────────────────────────────────────────────────────────────────────────────────────
+│                                                            Time          Allocations  
+│                                                      ───────────────   ───────────────
+│                    Total measured:                       66.2ms            8.03MiB    
+│ 
+│ Section                                      ncalls     time    %tot     alloc    %tot
+│ ──────────────────────────────────────────────────────────────────────────────────────
+│ Build Simulation                                  1   66.1ms  100.0%   8.03MiB  100.0%
+│   Build Simulation Inputs                         1   8.13ms   12.3%   2.84MiB   35.3%
+│     Wrap Branches                                 1   7.40μs    0.0%      176B    0.0%
+│     Wrap Dynamic Injectors                        1   5.52ms    8.3%   2.50MiB   31.1%
+│     Calculate MM, DAE_vector, Total Shunts        1   2.17ms    3.3%    149KiB    1.8%
+│     Wrap Static Injectors                         1    140μs    0.2%   28.8KiB    0.4%
+│   Pre-initialization                              1   5.45ms    8.2%   0.98MiB   12.2%
+│     Power Flow solution                           1   5.32ms    8.0%   0.96MiB   12.0%
+│ ──────────────────────────────────────────────────────────────────────────────────────
+│ 
+└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:487

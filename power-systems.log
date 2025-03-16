@@ -1,0 +1,240 @@
+┌ Warning: 2025-03-07T16:05:10.715 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 0 biomass, true, true, ACBus(1, DE0 0, ACBusTypes.REF = 3, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 20.580666178999998, 0.0, 28.257725468946663, (min = 0.0, max = 19.9812293), (min = -19.9812293, max = 19.9812293), (up = 19.9812293, down = 19.9812293), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(15.82820512820513, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 1998.12293, nothing, false, PrimeMovers.ST = 20, ThermalFuels.AG_BIPRODUCT = 10, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.104 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 0 coal, true, true, ACBus(1, DE0 0, ACBusTypes.REF = 3, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 9.5244385045599, 0.0, 13.0772719486749, (min = 0.0, max = 9.247027674328638), (min = -9.247027674328638, max = 9.247027674328638), (up = 9.247027674328638, down = 9.247027674328638), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(32.21332121212121, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 924.7027674328638, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.184 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 1 biomass, true, true, ACBus(2, DE0 1, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 11.508714177300002, 0.0, 15.80172783981862, (min = 0.0, max = 11.17350891), (min = -11.17350891, max = 11.17350891), (up = 11.17350891, down = 11.17350891), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(15.828205128205129, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 1117.350891, nothing, false, PrimeMovers.ST = 20, ThermalFuels.AG_BIPRODUCT = 10, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.226 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 1 coal, true, true, ACBus(2, DE0 1, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 51.605127892759, 0.0, 70.85502112027302, (min = 0.0, max = 50.10206591526109), (min = -50.10206591526109, max = 50.10206591526109), (up = 50.10206591526109, down = 50.10206591526109), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(32.21332121212121, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 5010.206591526109, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.314 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 1 lignite, true, true, ACBus(2, DE0 1, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 117.08364951287002, 0.0, 160.7585291967994, (min = 0.0, max = 113.67344612863243), (min = -113.67344612863243, max = 113.67344612863243), (up = 113.67344612863243, down = 113.67344612863243), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(12.404526576011058, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 11367.344612863244, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.375 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 2 biomass, true, true, ACBus(3, DE0 2, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 15.602526623000001, 0.0, 21.42262597818824, (min = 0.0, max = 15.1480841), (min = -15.1480841, max = 15.1480841), (up = 15.1480841, down = 15.1480841), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(15.828205128205127, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 1514.80841, nothing, false, PrimeMovers.ST = 20, ThermalFuels.AG_BIPRODUCT = 10, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.443 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 2 lignite, true, true, ACBus(3, DE0 2, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 100.57552138470099, 0.0, 138.09249163597954, (min = 0.0, max = 97.64613726674771), (min = -97.64613726674771, max = 97.64613726674771), (up = 97.64613726674771, down = 97.64613726674771), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(11.668798960013664, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 9764.613726674772, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.484 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 3 biomass, true, true, ACBus(4, DE0 3, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 10.982490257, 0.0, 15.079210359300756, (min = 0.0, max = 10.6626119), (min = -10.6626119, max = 10.6626119), (up = 10.6626119, down = 10.6626119), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(15.828205128205129, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 1066.26119, nothing, false, PrimeMovers.ST = 20, ThermalFuels.AG_BIPRODUCT = 10, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.525 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 3 coal, true, true, ACBus(4, DE0 3, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 79.89216966202301, 0.0, 109.69377656651828, (min = 0.0, max = 77.56521326414708), (min = -77.56521326414708, max = 77.56521326414708), (up = 77.56521326414708, down = 77.56521326414708), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(32.048586471922896, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 7756.521326414708, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.599 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 4 biomass, true, true, ACBus(5, DE0 4, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 23.8464869215, 0.0, 32.74177205760965, (min = 0.0, max = 23.151929050000003), (min = -23.151929050000003, max = 23.151929050000003), (up = 23.151929050000003, down = 23.151929050000003), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(15.828205128205125, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 2315.1929050000003, nothing, false, PrimeMovers.ST = 20, ThermalFuels.AG_BIPRODUCT = 10, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.858 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 4 coal, true, true, ACBus(5, DE0 4, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 49.20980507772599, 0.0, 67.56618809973071, (min = 0.0, max = 47.77650978424539), (min = -47.77650978424539, max = 47.77650978424539), (up = 47.77650978424539, down = 47.77650978424539), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(32.2133212121212, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 4777.650978424539, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:11.899 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 4 lignite, true, true, ACBus(5, DE0 4, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 0.36092554775789004, 0.0, 0.4955590336366382, (min = 0.0, max = 0.35041315316271926), (min = -0.35041315316271926, max = 0.35041315316271926), (up = 0.35041315316271926, down = 0.35041315316271926), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(12.090161456102786, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 35.04131531627193, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:05:14.169 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.278 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.279 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.280 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.280 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.281 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.281 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.282 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.283 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.284 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.284 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.285 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.286 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.286 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.287 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.288 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.288 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.289 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.751 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.759 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.760 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.760 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.761 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.761 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.762 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.762 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.763 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.763 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.934 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:05:14.940 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Info: 2025-03-07T16:05:28.765 [23180:1]: PowerFlow solve converged, the results are exported in DataFrames
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:88
+┌ Info: 2025-03-07T16:05:28.765 [23180:1]: Voltages are exported in pu. Powers are exported in MW/MVAr.
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:616
+┌ Info: 2025-03-07T16:08:06.872 [23180:1]: PowerFlow solve converged, the results are exported in DataFrames
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:88
+┌ Info: 2025-03-07T16:08:06.872 [23180:1]: Voltages are exported in pu. Powers are exported in MW/MVAr.
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:616
+┌ Info: 2025-03-07T16:08:36.099 [23180:1]: Unit System changed to UnitSystem.DEVICE_BASE = 1
+└ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
+┌ Warning: 2025-03-07T16:10:58.645 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.004 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 2 lignite, true, true, ACBus(3, DE0 2, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 100.57552138470099, 0.0, 138.09249163597954, (min = 0.0, max = 97.64613726674771), (min = -97.64613726674771, max = 97.64613726674771), (up = 97.64613726674771, down = 97.64613726674771), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(11.668798960013664, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 9764.613726674772, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:11:57.655 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.674 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.675 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.675 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.676 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.676 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.676 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.677 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.677 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.678 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.678 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.679 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.679 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.679 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.680 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.680 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.681 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.681 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.722 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.723 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.723 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.724 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.725 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.725 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.726 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.726 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.727 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.727 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.768 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:11:57.768 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Info: 2025-03-07T16:11:57.771 [23180:1]: PowerFlow solve converged, the results are exported in DataFrames
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:88
+┌ Info: 2025-03-07T16:11:57.771 [23180:1]: Voltages are exported in pu. Powers are exported in MW/MVAr.
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:616
+┌ Info: 2025-03-07T16:11:57.774 [23180:1]: PowerFlow solve converged, the results are exported in DataFrames
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:88
+┌ Info: 2025-03-07T16:11:57.774 [23180:1]: Voltages are exported in pu. Powers are exported in MW/MVAr.
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:616
+┌ Info: 2025-03-07T16:11:57.815 [23180:1]: Unit System changed to UnitSystem.DEVICE_BASE = 1
+└ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
+┌ Warning: 2025-03-07T16:13:15.315 [23180:1]: Invalid range
+│   valid_info.struct_name = ThermalStandard
+│   field_name = active_power
+│   valid_range = active_power_limits
+│   valid_info.ist_struct = ThermalStandard(DE0 2 lignite, true, true, ACBus(3, DE0 2, ACBusTypes.PV = 2, 0.0, 1.0, (min = 0.9, max = 1.1), 380.0, Area(DE, 0.0, 0.0, 0.0, Dict{String, Any}()), nothing, Dict{String, Any}()), 100.57552138470099, 0.0, 138.09249163597954, (min = 0.0, max = 97.64613726674771), (min = -97.64613726674771, max = 97.64613726674771), (up = 97.64613726674771, down = 97.64613726674771), ThermalGenerationCost(CostCurve{LinearCurve}(LinearCurve(11.668798960013664, 0.0), UnitSystem.NATURAL_UNITS = 2, LinearCurve(0.0, 0.0)), 0.0, 0.0, 0.0), 9764.613726674772, nothing, false, PrimeMovers.ST = 20, ThermalFuels.WASTE_COAL = 2, Service[], 10000.0, nothing, Dict{String, Any}())
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:219
+┌ Warning: 2025-03-07T16:13:16.605 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:13:16.709 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:13:16.709 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:13:16.710 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:13:16.710 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:13:16.711 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
+┌ Warning: 2025-03-07T16:13:16.711 [23180:1]: struct DynamicGenerator does not exist in validation configuration file, validation skipped
+└ @ InfrastructureSystems C:\Users\alaya\.julia\packages\InfrastructureSystems\nVUI1\src\validation.jl:51
