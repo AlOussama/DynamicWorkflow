@@ -217,7 +217,7 @@ function add_nc_loads!(sys, data,timestamps ,snapshot,load_connection_x,power_fa
         b_grid = PSY.get_bus(sys,bus_name[i])
         if load_connection_x>0
             #https://github.com/NREL-Sienna/PowerSystemsTestData/blob/7230f375001998f4cc30b2838953ea43c984e80c/118-Bus/data_118bus.jl#L79
-            [b, var_t] = create_load_connection!(sys, b_grid, p_max[i], base_powerV, load_connection_x, transformer_base_MVA);
+            b, var_t = create_load_connection!(sys, b_grid, p_max[i], base_powerV, load_connection_x, transformer_base_MVA);
             # b = PSY.ACBus(; 
             # number = 1000+get_number(b_grid),#parse(Int64,var_name[i])+1, 
             # name = get_name(b_grid)*" load",

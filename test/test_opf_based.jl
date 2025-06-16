@@ -30,7 +30,7 @@ s_transformer= 2000; # transformer base power 2000MVA based on pypsa assumption
 
 # x_connection =x_transformer*sys_base/s_transformer;#0.5e-3;#0.5e-3;#0.5e-3;#1e-3;#1e-4;#1e-3;
 # # configure_logging(; console_level = Logging.Error)
-power_factor=0.98;
+power_factor=0.95;
 
 
 sys = DynamicWorkflow.convert_system(src_net,T_vec,x_transformer,power_factor,s_transformer) # convert the pypsa network to a PowerSystems network
@@ -51,12 +51,14 @@ template= template_economic_dispatch(network=NetworkModel(ACPPowerModel;
 set_device_model!(template, Line, StaticBranchBounds)
 # set_device_model!(template, Transformer2W, StaticBranch) # no bounds needed for equivalent transformers
 # set_device_model!(template, TapTransformer, StaticBranch)
-problem = DecisionModel(template, sys; optimizer = solver, horizon = Hour(1))
+set_device_model!(template,RenewableDispatch,RenewableConstantPowerFactor) #TODO model changed to constant power factor
+problem = DecisionModel(template, sys; optimizer = solver, horizon = Hour(15))
 build!(problem;output_dir = mktempdir())
 PowerSimulations.solve!(problem)
 res = OptimizationProblemResults(problem);
 res_var = read_variables(res);
 res_expr = read_expressions(res);
+res_param=read_parameters(res)
 v_m = res_var["VoltageMagnitude__ACBus"]
 
 
@@ -69,3 +71,34 @@ for col in names(v_m)[2:end]
     plot!(plt, time_v, v_m[!, col], label=col)
 end
 display(plt)
+
+
+
+
+res_ren_pq_factor = res_var["ReactivePowerVariable__RenewableDispatch"][!,2:end]./res_var["ActivePowerVariable__RenewableDispatch"][!,2:end]
+
+plt1 = plot(title="Renewable Q/P factor over Time", xlabel=names(v_m)[1])
+for col in names(res_ren_pq_factor)[2:end]
+    plot!(plt1, time_v, res_ren_pq_factor[!, col], label=col)
+end
+display(plt1)
+
+
+
+res_conv_pq_factor = res_var["ReactivePowerVariable__ThermalStandard"][!,2:end]./res_var["ActivePowerVariable__ThermalStandard"][!,2:end]
+
+plt1 = plot(title="Conv Q/P factor over Time", xlabel=names(v_m)[1])
+for col in names(res_conv_pq_factor)[2:end]
+    plot!(plt1, time_v, res_conv_pq_factor[!, col], label=col)
+end
+display(plt1)
+
+
+res_ren_active_pu = res_var["ActivePowerVariable__RenewableDispatch"][!,2:end]./res_param["ActivePowerTimeSeriesParameter__RenewableDispatch"][!,2:end]
+
+
+plt1 = plot(title="Renewable active power in pu from the maximum available", xlabel=names(v_m)[1])
+for col in names(res_ren_active_pu)[41:50]
+    plot!(plt1, time_v, res_ren_active_pu[!, col], label=col)
+end
+display(plt1)
