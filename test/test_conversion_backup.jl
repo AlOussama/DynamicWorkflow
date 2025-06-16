@@ -19,25 +19,19 @@ src_net= "data\\de_n32_solved.nc"
 # T =1, avr=proportional_avr ==> 1 
 # T =1, avr=fixed_avr ==> 1 
 
-T_vec =  15;# 15 #1154# 3450 # 3457# 1# 2581 # 3457 #success#:4:1
+T_vec = 1154# 3450 # 3457# 1# 2581 # 3457 #success#:4:1
 N=length(T_vec)
 conv = ones(N,1);
-x_transformer= 0.1; # based on the transformer s_nom # based on pypsa assumption
-s_transformer= 2000; # transformer base power 200MVA based on pypsa assumption
-# sys_base = 100;
 
-# x_connection =x_transformer*sys_base/s_transformer;#0.5e-3;#0.5e-3;#0.5e-3;#1e-3;#1e-4;#1e-3;
-# # configure_logging(; console_level = Logging.Error)
-power_factor=0.99;
+# configure_logging(; console_level = Logging.Error)
 
-
-sys = DynamicWorkflow.convert_system(src_net,T_vec,x_transformer,power_factor,s_transformer) # convert the pypsa network to a PowerSystems network
-
+sys = DynamicWorkflow.convert_system(src_net,T_vec) # convert the pypsa network to a PowerSystems network
 gens = collect(get_components(ThermalStandard,sys)); #get list of convential generators
 gen_nom_bus = zeros(length(sys.bus_numbers)); # initialize series for the generation capacity of the buses 
 gen_act_bus = zeros(length(sys.bus_numbers)); # initialize series for the actual generation at time step t of the buses
 gen_max_bus = zeros(length(sys.bus_numbers)); # initialize series for the maximum generation at time step t of the buses
 
+# [gen_nom_bus[get_number(get_bus(x))]+=get_rating(x) for x in gens];
 l = length(sys.bus_numbers);
 [gen_max_bus[get_number(get_bus(x))]+=get_max_active_power(x) for x in gens]; # sum the maximum generation at time step t per bus
 [gen_act_bus[get_number(get_bus(x))]+=get_active_power(x) for x in gens]; # sum the actual generation at time step t per bus 
@@ -45,7 +39,7 @@ l = length(sys.bus_numbers);
 [set_bustype!(x,"PQ") for x in collect(get_components(ACBus,sys))]; # set all buses to PQ buses
 
 ind_s = sortperm(gen_act_bus,rev=true); # sort the actual generation vectors in descending order
-pv_buses = collect(get_buses(sys,Set(ind_s[1:20]))); # alternatively 1:l÷3*2
+pv_buses = collect(get_buses(sys,Set(ind_s[1:22]))); 
 [set_bustype!(x,"PV") for x in pv_buses]; # set the 22- buses with the highest actural generation as pv buses
 
 
@@ -53,11 +47,18 @@ ind_s = sortperm(gen_max_bus,rev=true); # sort the maximum generation at time st
 ref_buses = collect(get_buses(sys,Set(ind_s[1]))); # set the bus with the highest possible generation to a slack bus
 [set_bustype!(x,"REF") for x in ref_buses];
 
+# for i=1: 1
+    
+# sys = DynamicWorkflow.convert_system(src_net,T_vec)
+# println("Power Flow for snapshot $i")
+# conv_i  = PowerFlows.solve_powerflow(ACPowerFlow(check_reactive_power_limits=true),sys ;show_trace=false)
 
-loads = collect(get_components(PowerLoad,sys));
-loads_p = [get_active_power(l) for l in loads]; 
-loads_i_sort = sortperm(loads_p,rev=false);
+# conv[i] = !ismissing(conv_i)
+# # if !ismissing(conv_i)
+# # ac_sol[i] = conv_i
+# # end
 
+# end
 
 
 Basic = BaseMachine(; R = 0.0, Xd_p = 0.2995, eq_p = 1.05)
@@ -91,7 +92,7 @@ return DynamicGenerator(;
         ω_ref = 1.0,
         machine = oneDoneQ,
         shaft = BaseShaft,
-        avr = fixed_avr, #proportional_avr,#,fixed_avr, #
+        avr = proportional_avr,#,fixed_avr, #
         prime_mover = fixed_tg,
         pss = no_pss,
     )
@@ -121,7 +122,7 @@ end
 # for g in phs_gens
 #     name =get_name(g);
 #     add_component!(sys, create_dyn_gen(name),g)
-# end 
+# end
 
 
 
@@ -158,26 +159,21 @@ inner_control1() = VoltageModeControl(;
     ωad = 50.0,     #Active damping low pass filter cut-off frequency
     kad = 0.2,      #Active damping gain
 )
-
-inner_control_current() = CurrentModeControl(;
-    kpc = 1,     #Voltage controller proportional gain
-    kic = 0.1,#736.0,    #Voltage controller integral gain
-    kffv = 0.1,     #Binary variable enabling voltage feed-forward in current controllers
-)
-dc_source_lv() = FixedDCSource(; voltage = 750);
+dc_source_lv() = FixedDCSource(; voltage = 380);
 pll1() = FixedFrequency();
 # pll1() = KauraPLL(;
 #            ω_lp = 500.0, #Cut-off frequency for LowPass filter of PLL filter.
 #            kp_pll = 0.084,  #PLL proportional gain
 #            ki_pll = 4.69,   #PLL integral gain
 #        );
-filt1() = LCLFilter(
+
+filt1() = LCLFilter(;
            lf = 0.08,
            rf = 0.003,
            cf = 0.074,
            lg = 0.2,
            rg = 0.01,
-       );
+       )
 inverter = DynamicInverter(
     "TestInverter",
     1.0,
@@ -208,14 +204,14 @@ inverter = DynamicInverter(
         ω_ref = 1.0, # frequency reference set-point
         converter = converter_high_power(),
         outer_control = outer_control1(),
-        inner_control = inner_control1() , #inner_control1(),
+        inner_control = inner_control1(),
         dc_source = dc_source_lv(),
         freq_estimator = pll1(),
         filter = filt1(),
     ),g)
     end
     
-
+loads = collect(get_components(PowerLoad,sys));
 
 
 #TODO# ac_sol  = PowerFlows.solve_powerflow(ACPowerFlow(check_reactive_power_limits=true),sys;show_trace=true);
@@ -261,14 +257,12 @@ inverter = DynamicInverter(
 # vm = bus_sol_ac.Vm
 # [set_magnitude!(ordered_buses[i],vm[i]) for i in 1:length(vm)];
 # [set_magnitude!(b,1.05) for b in pv_buses];
-pert = LoadTrip(0.02,loads[loads_i_sort[end]])
-sim=Simulation!(ResidualModel,sys,pwd(),(0.0,0.2),pert)
 
 
-
-# pert1 = LoadChange(1.0,loads[4],:P_ref,0.5);
-
-sim_Mass=Simulation!(MassMatrixModel,sys,pwd(),(0.0,20.0),pert)
+pert = LoadTrip(1,loads[2])
+pert1 = LoadChange(1.0,loads[4],:P_ref,0.5);
+sim=Simulation!(ResidualModel,sys,pwd(),(0.0,2.0),pert1)
+# sim_Mass=Simulation!(MassMatrixModel,sys,pwd(),(0.0,20.0),pert)
 
 
 small_sig = small_signal_analysis(sim)
@@ -287,28 +281,19 @@ gen_labels= ["DE0 2 lignite", "DE0 4 biomass",   "DE0 2 biomass", "DE0 3 nuclear
 # gen_labels= gen_names[gen_labels_i];
 # "DE0 4 PHS", "DE0 0 ror", "DE0 3 PHS", "DE0 4 ror", "DE0 1 ror", "DE0 2 PHS", "DE0 3 ror", "DE0 2 onwind", "DE0 2 offwind-dc", "DE0 4 offwind-dc", "DE0 0 solar", "DE0 3 solar", "DE0 1 solar", "DE0 2 offwind-ac", "DE0 3 onwind", "DE0 2 solar", "DE0 4 onwind", "DE0 4 offwind-ac", "DE0 1 onwind", "DE0 0 onwind", "DE0 4 solar", "DE0 0 hydro", "DE0 3 hydro", "DE0 0 nuclear", "DE0 2 lignite", "DE0 4 biomass", "DE0 3 biomass", "DE0 1 coal", "DE0 1 biomass", "DE0 0 CCGT", "DE0 1 CCGT", "DE0 0 coal", "DE0 2 coal", "DE0 2 biomass", "DE0 3 nuclear", "DE0 0 biomass", "DE0 1 nuclear", "DE0 1 lignite", "DE0 4 coal", "DE0 3 coal", "DE0 4 lignite"]
 # ["DE0 0 PHS",  "DE0 2 offwind-dc","DE0 3 hydro", "DE0 0 nuclear", "DE0 2 lignite", "DE0 4 lignite"];
-# angle = [ get_state_series(results, (gen_labels[i], :δ)) for i=1:7];
+angle = [ get_state_series(results, (gen_labels[i], :δ)) for i=1:7];
 
-# freq = [ get_state_series(results, (gen_labels[i], :ω)) for i=1:7];
-# # freq = get_state_series(results, (gen_names[6], :ω));
-# p_ser = [get_activepower_series(results, gen_labels[i]) for i=1:7];
-
-# v_mag = [get_voltage_magnitude_series(results,i) for i=1:5];
-
-angle = [ get_state_series(results, (gen_names[i], :δ)) for i=1:7];
-
-freq = [ get_state_series(results, (gen_names[i], :ω)) for i=1:7];
+freq = [ get_state_series(results, (gen_labels[i], :ω)) for i=1:7];
 # freq = get_state_series(results, (gen_names[6], :ω));
-p_ser = [get_activepower_series(results, gen_names[i]) for i=1:7];
+p_ser = [get_activepower_series(results, gen_labels[i]) for i=1:7];
 
-v_mag = [get_voltage_magnitude_series(results,i) for i=1:7];
-
+v_mag = [get_voltage_magnitude_series(results,i) for i=1:5];
 # plot(angle, xlabel = "time", ylabel = "rotor angle [rad]");
 # plot(freq, xlabel = "time", ylabel = "frequency [p.u.]", lw=2, label= permutedims(gen_labels))
 
-plot(p_ser,lw=2,xlabel = "time in s", ylabel =  "active power in p.u.",fontsize=24)
+plot(p_ser[5],lw=2,xlabel = "time in s", ylabel =  "active power in p.u.",fontsize=24, label=(gen_labels[5]))
 
 plot(angle,lw=2,xlabel = "time in s", ylabel =  "angle in rad",fontsize=24, label=permutedims(gen_labels))
 
 plot(freq,lw=2,xlabel = "time in s", ylabel =  "frequency in p.u.",fontsize=24, label=permutedims(gen_labels))
-# s
+plot(v_mag,lw=2,xlabel = "time in s", ylabel =  "voltage magnitude in p.u.",fontsize=24, label="bus ".*["1" "2" "3" "4" "5"])

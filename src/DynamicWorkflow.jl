@@ -24,16 +24,17 @@ const res = Dates.Hour(1)
 const CONFIG_DF = CSV.read("mapping_config.csv",DataFrame,missingstring="NULL")
 # snapshot = 230
 # greet() = print("Hello World!")
-function convert_system(src_file::String,snapshot=1)    
+function convert_system(src_file::String,snapshot=1,x_connection=0.1,power_factor=0.999,transformer_base_MVA=2000)    
     sys = create_sys(BASE_MVA, FREQ0)
     data = open_cdf(src_file)
     # NetCDF.close(src_file)
     tv = get_nc_var(data, "snapshots")
     n_T = length(tv)
+    # x_connection =0.01;
     timestamps = range(DateTime("2013-01-01T00:00:00"); step= res, length=n_T)
     sys = add_nc_buses!(sys,data)
     sys = add_nc_lines!(sys,data)
-    sys = add_nc_loads!(sys, data, timestamps ,snapshot; zip_loads= false)
+    sys = add_nc_loads!(sys, data, timestamps ,snapshot, x_connection,power_factor, transformer_base_MVA; zip_loads= false)
     sys = add_nc_generators!(sys, data,timestamps ,snapshot; config=CONFIG_DF)
     sys = add_nc_storage!(sys, data,timestamps ,snapshot; config=CONFIG_DF)
     return sys
@@ -52,6 +53,9 @@ function open_cdf(src_file::String = "data\\base_s_5_elec.nc")
 
     return data
 end
+
+
+
 
 function add_nc_buses!(sys, data)
     #data = open_cdf(src_file)
@@ -101,6 +105,41 @@ function add_nc_buses!(sys, data)
 end
 
 
+function create_load_connection!(sys, b_grid, p_max_i, base_powerV, load_connection_x, transformer_base_MVA)
+    b = PSY.ACBus(; 
+        number = 1000 + get_number(b_grid),
+        name = get_name(b_grid) * " load",
+        bustype = PSY.ACBusTypes.PQ,
+        angle = 0.0,
+        magnitude = 1.0,
+        area = get_area(b_grid),
+        voltage_limits = (min = 0.9, max = 1.1),
+        base_voltage = get_base_voltage(b_grid) / 3,
+    )
+    PSY.add_component!(sys, b)
+    rating_l = 1 / 0.7 * maximum([1, p_max_i]) * 1.0 * base_powerV
+    n_parallel_transformer = maximum([1, rating_l / (transformer_base_MVA)])
+    x_tr = load_connection_x / n_parallel_transformer
+    x_tr_pu = x_tr * BASE_MVA / transformer_base_MVA
+    x_l = x_tr_pu
+    rating_l = n_parallel_transformer * transformer_base_MVA / BASE_MVA
+    var_t = PSY.TapTransformer(;
+        tap = 1.0,
+        name = get_name(b_grid) * " load_connection",
+        available = true,
+        active_power_flow = 0,
+        reactive_power_flow = 0,
+        arc = PSY.Arc(; from = b_grid, to = b),
+        x = x_l,
+        r = x_l / 50,
+        primary_shunt = 0.0,
+        rating = rating_l,
+    )
+    PSY.add_component!(sys, var_t)
+    return b, var_t
+end
+
+
 function add_nc_lines!(sys, data)
     name_str = LINE_PREFIX .* "i"
     var_name = get_nc_var(data, name_str)
@@ -115,7 +154,7 @@ function add_nc_lines!(sys, data)
     b = get_nc_var(data, LINE_PREFIX*"b", repeat([0.0], n_vars)) .*z_base
     g = get_nc_var(data, LINE_PREFIX*"g", repeat([0.0], n_vars)) .*z_base
     
-    rating = get_nc_var(data,LINE_PREFIX*"s_nom")./ BASE_MVA
+    rating = get_nc_var(data,LINE_PREFIX*"s_nom")./ BASE_MVA #TODO 0.7 einführen
     # available = get_nc_var(data, LINE_PREFIX*"active", av_vec)
     num_parallel = get_nc_var(data, LINE_PREFIX*"num_parallel")
 
@@ -133,7 +172,7 @@ function add_nc_lines!(sys, data)
             x = x[i],
             b = (from = b[i]/2, to = b[i]/2),
             g = (from = g[i]/2, to = g[i]/2),
-            rating = rating[i],
+            rating = 0.7*rating[i], #TODO rating limited to 0.7
             active_power_flow = 0.0,
             reactive_power_flow = 0.0,
             angle_limits = (min = -π/2, max = π/2 ),
@@ -147,9 +186,9 @@ function add_nc_lines!(sys, data)
 end
 
 
-function add_nc_loads!(sys, data,timestamps ,snapshot; zip_loads)
+function add_nc_loads!(sys, data,timestamps ,snapshot,load_connection_x,power_factor,transformer_base_MVA; zip_loads)
     # zip_loads = false
-    power_factor = 0.99
+    # power_factor = 0.98
     zip_factors=(0.7,0.05,0.25)
     base_factor=1.0
     # snapshot=1
@@ -166,15 +205,77 @@ function add_nc_loads!(sys, data,timestamps ,snapshot; zip_loads)
     base_powerV = BASE_MVA #
     # base_powerV = p_max .* base_factor
 
-    p_max = p_max ./ base_powerV
-    q_max = p_max .* pq_factor
+    p_max = p_max ./ base_powerV; # p_max in pu 
+    q_max = p_max .* pq_factor; 
 
     pt_ts = p_t ./ (base_powerV.*p_max)  
     q_t_pu = pt_ts .* pq_factor  
 
     for i=1: n_vars
-        b = PSY.get_bus(sys,bus_name[i])
+        
         load_timearray = TimeArray(timestamps, pt_ts[i,:]);
+        b_grid = PSY.get_bus(sys,bus_name[i])
+        if load_connection_x>0
+            #https://github.com/NREL-Sienna/PowerSystemsTestData/blob/7230f375001998f4cc30b2838953ea43c984e80c/118-Bus/data_118bus.jl#L79
+            [b, var_t] = create_load_connection!(sys, b_grid, p_max[i], base_powerV, load_connection_x, transformer_base_MVA);
+            # b = PSY.ACBus(; 
+            # number = 1000+get_number(b_grid),#parse(Int64,var_name[i])+1, 
+            # name = get_name(b_grid)*" load",
+            # bustype = PSY.ACBusTypes.PQ,
+            # angle = 0.0,
+            # magnitude = 1.0,
+            # area = get_area(b_grid),
+            # voltage_limits = (min = 0.9, max = 1.1),
+            # base_voltage = get_base_voltage(b_grid)/3,
+            # );
+            # PSY.add_component!(sys, b);
+            # # println(p_max)
+            # rating_l = 1/0.7*maximum([1, p_max[i]])*1.0*base_powerV;
+            # # rating_l = 1/0.7*(abs(p_t[i,tj])); # load in MW 
+
+            # n_parallel_transformer = maximum([1,rating_l/(transformer_base_MVA)]); # number of needed parallel transformers based on the transformer_base_MVA and on the maximal load over time 
+            # x_tr = load_connection_x/n_parallel_transformer; # equivalent transformer impedance for the parallel transformers in the transformer base power 
+            # #s_tr_base = transformer_base_MVA*n_parallel_transformer; # rating for the parallel transformers
+            # x_tr_pu = x_tr * BASE_MVA / transformer_base_MVA; # calculate the impedance in the system per unit
+            # # TODO adapt x_connection
+            # x_l = x_tr_pu; #load_connection_x;#π/(4*rating_l);#minimum([load_connection_x, π/(4*rating_l) ]);
+            # rating_l = n_parallel_transformer*transformer_base_MVA/BASE_MVA;
+            # # var_t = PSY.Transformer2W(;
+            # var_t = PSY.TapTransformer(;
+            # tap=1.0,
+            # name = get_name(b_grid)* " load_connection",
+            # available = true, 
+            # active_power_flow= 0,
+            # reactive_power_flow=0,
+            # arc = PSY.Arc(; from = b_grid, to = b),
+            # x = x_l,
+            # r = x_l/50,#0,#x_l/20,#x_l/10,
+            # # b = (from = 0/2, to = 0/2),
+            # # g = (from = 0/2, to = 0/2),
+            # primary_shunt = 0.0,
+            # rating = rating_l, # rating in the system base multiplied by 0.7 #TODO
+            # # active_power_flow = 0,#p_t[i,tj]./base_powerV,
+            # # reactive_power_flow = 0,#pq_factor.*p_t[i,tj]./base_powerV,
+            # # angle_limits = (min = -π/2, max = π/2 ),
+            # );
+            # # var_t = PSY.Line(; 
+            # # name = get_name(b_grid)* " load_connection",
+            # # available = true, 
+            # # arc = PSY.Arc(; from = b_grid, to = b),
+            # # x = x_l,
+            # # r = x_l/10,
+            # # b = (from = 0/2, to = 0/2),
+            # # g = (from = 0/2, to = 0/2),
+            # # rating = rating_l,
+            # # active_power_flow = 0,#p_t[i,tj]./base_powerV,
+            # # reactive_power_flow = 0,#pq_factor.*p_t[i,tj]./base_powerV,
+            # # angle_limits = (min = -π/2, max = π/2 ),
+            # # );
+            # PSY.add_component!(sys,var_t)
+
+        else 
+            b=b_grid;
+        end
         if !zip_loads
             var_t = PSY.PowerLoad(
                 name = var_name[i],
@@ -259,8 +360,8 @@ function add_nc_generators!(sys, data,timestamps ,snapshot; config=conf_df)
         comp = config_j.component[1]
         fuel = config_j.fuel[1]
         prime_mover = config_j.prime_mover_type[1]
-        pq_max = config_j.pq_max[1]
-        pq_nom = config_j.pq_nom[1]
+        pq_max = config_j.pq_max[1] #TODO 
+        pq_nom = config_j.pq_nom[1] 
         p_timearray = TimeArray(timestamps, pt_ts[i,:]);
         q_timearray = TimeArray(timestamps, pq_nom.*pt_ts[i,:]);
 
@@ -283,7 +384,7 @@ function add_nc_generators!(sys, data,timestamps ,snapshot; config=conf_df)
             active_power = maximum([p_i,0.0]),#maximum([pt_ts[i,tj],0.0]),
             reactive_power = pq_nom*p_i,#pt_ts[i,tj],
             base_power = base_i,#base_powerV[i],
-            rating = sqrt(1.0+pq_max^2),
+            rating = 1.0,#sqrt(1.0+pq_max^2),
             active_power_limits = (min= 0.0,max =1.0),
             reactive_power_limits = (min= -pq_max,max =pq_max),
             ramp_limits = (up = 1.0, down = 1.0),
@@ -330,7 +431,7 @@ function add_nc_generators!(sys, data,timestamps ,snapshot; config=conf_df)
                             active_power = maximum([pt_ts[i,tj],0]),
                             reactive_power = pq_nom*pt_ts[i,tj],
                             base_power = base_powerV[i],
-                            rating = sqrt(1.0+pq_max^2),
+                            rating = 1.0,#sqrt(1.0+pq_max^2),
                             power_factor = cos(atan(pq_nom)),
                             #active_power_limits = (min= 0.0,max =1.0), RenewableDispatch generators don't have active power limits, the have timeseries for this limits
                             reactive_power_limits = (min= -pq_max,max =pq_max),
@@ -345,7 +446,7 @@ function add_nc_generators!(sys, data,timestamps ,snapshot; config=conf_df)
                             active_power = maximum([pt_ts[i,tj],0]),
                             reactive_power = pq_nom*pt_ts[i,tj],
                             base_power = base_powerV[i],
-                            rating = sqrt(1.0+pq_max^2),
+                            rating = 1.0,#sqrt(1.0+pq_max^2),
                             # power_factor = cos(atan(pq_nom)), # HydroDispatch doesn't support power_factor
                             active_power_limits = (min= 0.0,max =1.0), 
                             reactive_power_limits = (min= -pq_max,max =pq_max),
@@ -421,7 +522,6 @@ end
 
 function add_nc_storage!(sys, data,timestamps ,snapshot; config=conf_df)
     # zip_loads = false
-    snapshot=1
     prefix = STRG_UNIT_PREFIX
     tj = snapshot
     name_str = prefix .* "i"
@@ -480,7 +580,7 @@ function add_nc_storage!(sys, data,timestamps ,snapshot; config=conf_df)
                 active_power = maximum([pt_ts[i,tj],0]),
                 reactive_power = pq_nom*pt_ts[i,tj],
                 base_power = base_powerV[i],
-                rating = sqrt(1.0+pq_max^2),
+                rating = 1.0,#sqrt(1.0+pq_max^2),
                 storage_capacity= cap_v[i], # capacity in pu. hr 
                 # power_factor = cos(atan(pq_nom)), # HydroDispatch doesn't support power_factor
                 active_power_limits = (min= 0.0,max =1.0), 
@@ -579,7 +679,7 @@ function add_nc_storage!(sys, data,timestamps ,snapshot; config=conf_df)
                             active_power = maximum((pt_ts[i,tj],0.0)),
                             reactive_power = pq_nom*maximum((pt_ts[i,tj],0.0)),
                             base_power = base_powerV[i],
-                            rating = sqrt(1.0+pq_max^2),
+                            rating = 1.0,# sqrt(1.0+pq_max^2),
                             # power_factor = cos(atan(pq_nom)), # HydroDispatch doesn't support power_factor
                             active_power_limits = (min= 0.0,max =1.0), 
                             reactive_power_limits = (min= -pq_max,max =pq_max),
