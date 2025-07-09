@@ -1,56 +1,42 @@
-┌ Info: 2025-06-16T12:16:03.210 [19648:1]: Pre-Initializing Simulation States
+┌ Info: 2025-07-08T14:24:07.601 [23388:1]: Pre-Initializing Simulation States
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:265
-┌ Info: 2025-06-16T12:16:03.210 [19648:1]: Unit System changed to UnitSystem.SYSTEM_BASE = 0
+┌ Info: 2025-07-08T14:24:07.617 [23388:1]: Unit System changed to UnitSystem.SYSTEM_BASE = 0
 └ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
-┌ Warning: 2025-06-16T12:16:03.210 [19648:1]: Unit DE0 14 ror set at the limit 0.01574. Q_max = 0.01574 Q_min = -0.01574
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Warning: 2025-06-16T12:16:03.218 [19648:1]: Unit DE0 18 ror set at the limit -0.6743299999999998. Q_max = 0.6743299999999998 Q_min = -0.6743299999999998
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Warning: 2025-06-16T12:16:03.218 [19648:1]: Unit DE0 19 ror set at the limit -0.39205000000000007. Q_max = 0.39205000000000007 Q_min = -0.39205000000000007
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Warning: 2025-06-16T12:16:03.221 [19648:1]: Unit DE0 30 ror set at the limit 0.00055. Q_max = 0.00055 Q_min = -0.00055
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Warning: 2025-06-16T12:16:03.221 [19648:1]: Unit DE0 6 ror set at the limit -0.19899999999999998. Q_max = 0.19899999999999998 Q_min = -0.19899999999999998
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Warning: 2025-06-16T12:16:03.221 [19648:1]: Unit DE0 6 biomass set at the limit -4.2394846500000005. Q_max = 4.2394846500000005 Q_min = -4.2394846500000005
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Warning: 2025-06-16T12:16:03.221 [19648:1]: Unit DE0 7 ror set at the limit -0.6390744. Q_max = 0.6390744 Q_min = -0.6390744
-└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\post_processing.jl:358
-┌ Info: 2025-06-16T12:16:03.223 [19648:1]: PowerFlow solve converged, the results have been stored in the system
+┌ Info: 2025-07-08T14:24:07.667 [23388:1]: PowerFlow solve converged, the results have been stored in the system
 └ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:48
-┌ Info: 2025-06-16T12:16:03.223 [19648:1]: Unit System changed to UnitSystem.DEVICE_BASE = 1
+┌ Info: 2025-07-08T14:24:07.667 [23388:1]: Unit System changed to UnitSystem.DEVICE_BASE = 1
 └ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
-┌ Info: 2025-06-16T12:16:03.854 [19648:1]: Residual from initial guess: max = 8.902385495446197e-10 at 81, total = 1.5053756775778576e-7
+┌ Info: 2025-07-08T14:24:07.749 [23388:1]: Residual from initial guess: max = 1.4500756754569322e-12 at 3, total = 1.7768659413450692e-11
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\nlsolve_wrapper.jl:115
-┌ Info: 2025-06-16T12:16:05.988 [19648:1]: Initialization non-linear solve succeeded with a tolerance of 1.0e-9 using solver trust_region. Saving solution.
+┌ Info: 2025-07-08T14:24:07.749 [23388:1]: Initialization non-linear solve succeeded with a tolerance of 1.0e-9 using solver trust_region. Saving solution.
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\nlsolve_wrapper.jl:82
-┌ Info: 2025-06-16T12:16:05.988 [19648:1]: Attaching Perturbations
+┌ Info: 2025-07-08T14:24:07.749 [23388:1]: Attaching Perturbations
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:299
-┌ Info: 2025-06-16T12:16:05.988 [19648:1]: Simulations status = BUILT
+┌ Info: 2025-07-08T14:24:07.799 [23388:1]: Simulations status = BUILT
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:462
-┌ Info: 2025-06-16T12:16:05.988 [19648:1]: 
+┌ Info: 2025-07-08T14:24:07.799 [23388:1]: 
 │ ──────────────────────────────────────────────────────────────────────────────────────
 │                                                            Time          Allocations  
 │                                                      ───────────────   ───────────────
-│                    Total measured:                        2.78s             645MiB    
+│                    Total measured:                        307ms             197KiB    
 │ 
 │ Section                                      ncalls     time    %tot     alloc    %tot
 │ ──────────────────────────────────────────────────────────────────────────────────────
-│ Build Simulation                                  1    2.78s  100.0%    645MiB  100.0%
-│   Build Simulation Inputs                         1   7.59ms    0.3%   2.99MiB    0.5%
-│     Wrap Branches                                 1   12.5μs    0.0%      176B    0.0%
-│     Wrap Dynamic Injectors                        1   5.01ms    0.2%   2.39MiB    0.4%
-│     Calculate MM, DAE_vector, Total Shunts        1   1.97ms    0.1%    250KiB    0.0%
-│     Wrap Static Injectors                         1    132μs    0.0%   28.9KiB    0.0%
-│   Pre-initialization                              1   20.9ms    0.8%   10.3MiB    1.6%
-│     Power Flow solution                           1   8.41ms    0.3%   1.23MiB    0.2%
-│     Initialize Static Injectors                   1   4.40μs    0.0%     64.0B    0.0%
-│     Initialize Dynamic Injectors                  1   12.1ms    0.4%   9.06MiB    1.4%
-│   Calculate Jacobian                              1    626ms   22.5%    154MiB   23.9%
-│   Make Model Function                             1   38.7μs    0.0%   33.4KiB    0.0%
-│   Initial Condition NLsolve refinement            1    2.13s   76.5%    478MiB   74.0%
-│   Build Perturbations                             1    123μs    0.0%   9.77KiB    0.0%
-│   Make DiffEq Problem                             1    179μs    0.0%   28.2KiB    0.0%
+│ Build Simulation                                  1    306ms  100.0%    196KiB  100.0%
+│   Build Simulation Inputs                         1    113ms   36.9%   26.4KiB   13.4%
+│     Wrap Branches                                 1   49.8μs    0.0%      176B    0.1%
+│     Wrap Dynamic Injectors                        1   64.5ms   21.1%   15.3KiB    7.8%
+│     Calculate MM, DAE_vector, Total Shunts        1   1.14ms    0.4%      992B    0.5%
+│     Wrap Static Injectors                         1   17.0ms    5.6%   3.16KiB    1.6%
+│   Pre-initialization                              1    110ms   35.8%   76.4KiB   38.9%
+│     Power Flow solution                           1   43.5ms   14.2%   50.1KiB   25.5%
+│     Initialize Static Injectors                   1   6.70μs    0.0%     64.0B    0.0%
+│     Initialize Dynamic Injectors                  1   47.7ms   15.6%   15.8KiB    8.1%
+│   Calculate Jacobian                              1   28.4ms    9.3%   29.1KiB   14.8%
+│   Make Model Function                             1    456μs    0.1%      528B    0.3%
+│   Initial Condition NLsolve refinement            1   9.05ms    3.0%   36.5KiB   18.6%
+│   Build Perturbations                             1   20.7ms    6.8%   9.68KiB    4.9%
+│   Make DiffEq Problem                             1   23.2ms    7.6%   6.91KiB    3.5%
 │ ──────────────────────────────────────────────────────────────────────────────────────
 │ 
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:487

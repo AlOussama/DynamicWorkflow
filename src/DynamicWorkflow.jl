@@ -689,16 +689,16 @@ function add_nc_storage!(sys, data,timestamps ,snapshot; config=conf_df)
                             prime_mover_type = PrimeMovers.HY,
                             );
 
-                # var_loadt = PSY.PowerLoad(
-                # name = var_name[i]*"_pump",
-                # available = true, 
-                # bus= bi,
-                # active_power = maximum((-pt_ts[i,tj],0)),
-                # reactive_power = pq_nom*maximum((-pt_ts[i,tj],0)),
-                # base_power = base_powerV[i],
-                # max_active_power = 1,
-                # max_reactive_power = pq_max,
-                # );
+                var_loadt = PSY.PowerLoad(
+                name = var_name[i]*"_pump",
+                available = true, 
+                bus= bi,
+                active_power = maximum((-pt_ts[i,tj],0)),
+                reactive_power = pq_nom*maximum((-pt_ts[i,tj],0)),
+                base_power = base_powerV[i],
+                max_active_power = 1,
+                max_reactive_power = pq_max,
+                );
 
             # p_ts = SingleTimeSeries(;
             #         name = "active_power",
