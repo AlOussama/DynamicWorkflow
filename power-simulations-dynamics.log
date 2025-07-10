@@ -1,42 +1,136 @@
-┌ Info: 2025-07-08T14:24:07.601 [23388:1]: Pre-Initializing Simulation States
+┌ Info: 2025-07-09T19:19:22.692 [23436:1]: Pre-Initializing Simulation States
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:265
-┌ Info: 2025-07-08T14:24:07.617 [23388:1]: Unit System changed to UnitSystem.SYSTEM_BASE = 0
+┌ Info: 2025-07-09T19:19:22.692 [23436:1]: Unit System changed to UnitSystem.SYSTEM_BASE = 0
 └ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
-┌ Info: 2025-07-08T14:24:07.667 [23388:1]: PowerFlow solve converged, the results have been stored in the system
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5001001 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5001143 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5002005 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5002144 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5004146 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5005012 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5006013 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5006014 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5006148 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.699 [23436:1]: Bus 5007015 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5007149 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5008017 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5008073 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5008150 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5009021 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5009151 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5010120 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5011024 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5011025 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5011153 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5013155 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5014156 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5016037 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5016157 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5017039 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5017158 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5018042 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5018159 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5020045 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5020160 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5021161 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5022162 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5024163 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5025164 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5026055 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5026165 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5027056 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5027057 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5027166 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5028167 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5029168 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5030169 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5031078 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5031170 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5032068 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.700 [23436:1]: Bus 5032171 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.705 [23436:1]: Bus 5007117 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.705 [23436:1]: Bus 5023052 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.706 [23436:1]: Bus 5024053 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.706 [23436:1]: Bus 5025054 changed to PSY.ACBusTypes.PQ
+└ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:115
+┌ Info: 2025-07-09T19:19:22.713 [23436:1]: PowerFlow solve converged, the results have been stored in the system
 └ @ PowerFlows C:\Users\alaya\.julia\packages\PowerFlows\BykSI\src\nlsolve_ac_powerflow.jl:48
-┌ Info: 2025-07-08T14:24:07.667 [23388:1]: Unit System changed to UnitSystem.DEVICE_BASE = 1
+┌ Info: 2025-07-09T19:19:22.713 [23436:1]: Unit System changed to UnitSystem.DEVICE_BASE = 1
 └ @ PowerSystems C:\Users\alaya\.julia\packages\PowerSystems\azBUB\src\base.jl:552
-┌ Info: 2025-07-08T14:24:07.749 [23388:1]: Residual from initial guess: max = 1.4500756754569322e-12 at 3, total = 1.7768659413450692e-11
-└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\nlsolve_wrapper.jl:115
-┌ Info: 2025-07-08T14:24:07.749 [23388:1]: Initialization non-linear solve succeeded with a tolerance of 1.0e-9 using solver trust_region. Saving solution.
-└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\nlsolve_wrapper.jl:82
-┌ Info: 2025-07-08T14:24:07.749 [23388:1]: Attaching Perturbations
-└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:299
-┌ Info: 2025-07-08T14:24:07.799 [23388:1]: Simulations status = BUILT
-└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:462
-┌ Info: 2025-07-08T14:24:07.799 [23388:1]: 
+┌ Warning: 2025-07-09T19:19:22.721 [23436:1]: Initialization in Machine DE0 30 ror failed
+└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\initialization\generator_components\init_machine.jl:127
+┌ Error: 2025-07-09T19:19:22.738 [23436:1]: Invalid initial condition values ["DE0 30 ror - :ω"]
+└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation_initialization.jl:148
+┌ Error: 2025-07-09T19:19:22.886 [23436:1]: ResidualModel failed to build
+│   exception = (ErrorException("The simulation failed to find an adequate initial guess for the initialization. Check the intialization routine."), Union{Ptr{Nothing}, Base.InterpreterIP}[Ptr{Nothing} @0x00007ff8e1dd3ab6, Ptr{Nothing} @0x00000265178b1ea6, Ptr{Nothing} @0x00000265178b5a94, Ptr{Nothing} @0x00000265178bd9d2, Ptr{Nothing} @0x00000265178be28d, Ptr{Nothing} @0x00000265178c0c2c, Ptr{Nothing} @0x00000265178c0e23, Ptr{Nothing} @0x00000265178c0e89, Ptr{Nothing} @0x00007ff8f915cc7a, Ptr{Nothing} @0x00007ff8f915c774, Ptr{Nothing} @0x00007ff8f915d3c0, Ptr{Nothing} @0x00007ff8f915e31e, Base.InterpreterIP in top-level CodeInfo for Main at statement 6, Ptr{Nothing} @0x00007ff8f917ae38, Ptr{Nothing} @0x00007ff8f917b6bc, Ptr{Nothing} @0x00007ff8f917c5b6, Ptr{Nothing} @0x000002655d5302fd, Ptr{Nothing} @0x00007ff8f914959b, Ptr{Nothing} @0x00007ff8f914ba42, Ptr{Nothing} @0x00007ff8e221a5c7, Ptr{Nothing} @0x00007ff8f914ba42, Ptr{Nothing} @0x00007ff8e0e32e3b, Ptr{Nothing} @0x00007ff8f914ba42, Ptr{Nothing} @0x000002654659250b, Ptr{Nothing} @0x000002654659269c, Ptr{Nothing} @0x00000265465d6ad3, Ptr{Nothing} @0x00000265465d942c, Ptr{Nothing} @0x00000265465db017, Ptr{Nothing} @0x000002655d4c8efa, Ptr{Nothing} @0x000002655d4c99a8, Ptr{Nothing} @0x000002655d4ca98d, Ptr{Nothing} @0x000002655d4cab1f, Ptr{Nothing} @0x00007ff8f914959b, Ptr{Nothing} @0x000002654658f02e, Ptr{Nothing} @0x000002654658f06b, Ptr{Nothing} @0x00007ff8f914ba42, Ptr{Nothing} @0x000002654655154c, Ptr{Nothing} @0x00000265465517d4, Ptr{Nothing} @0x00007ff8f9162e03])
+└ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:468
+┌ Info: 2025-07-09T19:19:22.936 [23436:1]: 
 │ ──────────────────────────────────────────────────────────────────────────────────────
 │                                                            Time          Allocations  
 │                                                      ───────────────   ───────────────
-│                    Total measured:                        307ms             197KiB    
+│                    Total measured:                        252ms            39.2MiB    
 │ 
 │ Section                                      ncalls     time    %tot     alloc    %tot
 │ ──────────────────────────────────────────────────────────────────────────────────────
-│ Build Simulation                                  1    306ms  100.0%    196KiB  100.0%
-│   Build Simulation Inputs                         1    113ms   36.9%   26.4KiB   13.4%
-│     Wrap Branches                                 1   49.8μs    0.0%      176B    0.1%
-│     Wrap Dynamic Injectors                        1   64.5ms   21.1%   15.3KiB    7.8%
-│     Calculate MM, DAE_vector, Total Shunts        1   1.14ms    0.4%      992B    0.5%
-│     Wrap Static Injectors                         1   17.0ms    5.6%   3.16KiB    1.6%
-│   Pre-initialization                              1    110ms   35.8%   76.4KiB   38.9%
-│     Power Flow solution                           1   43.5ms   14.2%   50.1KiB   25.5%
-│     Initialize Static Injectors                   1   6.70μs    0.0%     64.0B    0.0%
-│     Initialize Dynamic Injectors                  1   47.7ms   15.6%   15.8KiB    8.1%
-│   Calculate Jacobian                              1   28.4ms    9.3%   29.1KiB   14.8%
-│   Make Model Function                             1    456μs    0.1%      528B    0.3%
-│   Initial Condition NLsolve refinement            1   9.05ms    3.0%   36.5KiB   18.6%
-│   Build Perturbations                             1   20.7ms    6.8%   9.68KiB    4.9%
-│   Make DiffEq Problem                             1   23.2ms    7.6%   6.91KiB    3.5%
+│ Build Simulation                                  1    252ms  100.0%   39.2MiB  100.0%
+│   Build Simulation Inputs                         1   8.30ms    3.3%   7.13MiB   18.2%
+│     Wrap Branches                                 1   10.2μs    0.0%      176B    0.0%
+│     Wrap Dynamic Injectors                        1   3.97ms    1.6%   2.20MiB    5.6%
+│     Calculate MM, DAE_vector, Total Shunts        1   2.39ms    0.9%   2.13MiB    5.4%
+│     Wrap Static Injectors                         1    178μs    0.1%   48.5KiB    0.1%
+│   Pre-initialization                              1   47.1ms   18.7%   19.9MiB   50.7%
+│     Power Flow solution                           1   22.0ms    8.7%   9.50MiB   24.2%
+│     Initialize Static Injectors                   1   3.00μs    0.0%     64.0B    0.0%
+│     Initialize Dynamic Injectors                  1   17.7ms    7.0%   10.3MiB   26.3%
 │ ──────────────────────────────────────────────────────────────────────────────────────
 │ 
 └ @ PowerSimulationsDynamics C:\Users\alaya\.julia\packages\PowerSimulationsDynamics\XLAsU\src\base\simulation.jl:487

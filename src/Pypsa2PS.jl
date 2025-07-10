@@ -9,7 +9,8 @@ using DataFrames
 const BASE_MVA = 100.0
 const FREQ0 = 50.0
 const N_inc_load = 1e6
-const N_inc_gen = 2e6
+const N_inc_gen = 5e6
+const N_inc_st = 7e6
 
 # Utility: get variable from NetCDF with default
 function get_nc_var(data, var::String="buses_i", default = nothing)
@@ -163,7 +164,7 @@ function add_nc_loads!(sys, data, timestamps, snapshot, x_connection, power_fact
                 x_connection=x_connection,
                 transformer_base_MVA=transformer_base_MVA,
                 rating=p_max[i]*base_powerV,
-                N_inc = N_inc_load;
+                N_inc = N_inc_load+i
             )
         else
             b = b_grid
@@ -272,12 +273,13 @@ function add_generators!(sys, data, timestamps, snapshot, config;
         b_grid.bustype = PowerSystems.ACBusTypes.PQ
         # Create new PV bus for generator connection
         b_gen, _ = split_bus!(sys, b_grid;
-            suffix="_gen",
+            suffix="_gen_"* carrier[i],
             base_voltage=PowerSystems.get_base_voltage(b_grid),
             area=PowerSystems.get_area(b_grid),
             x_connection=x_connection,
             transformer_base_MVA=transformer_base_MVA,
-            rating=base_powerV[i]
+            rating=base_powerV[i],
+            N_inc= N_inc_gen+i,
         )
         # Set new bus type to PV
         b_gen.bustype = PowerSystems.ACBusTypes.PV
@@ -315,6 +317,7 @@ function add_generators!(sys, data, timestamps, snapshot, config;
             p_ts = SingleTimeSeries(; name = "active_power", data = p_timearray, scaling_factor_multiplier = get_max_active_power)
             q_ts = SingleTimeSeries(; name = "reactive_power", data = q_timearray, scaling_factor_multiplier = get_max_active_power)
             if !isnothing(ren_i)
+                println("adding max time series")
                 pmax_ta = TimeArray(timestamps, pmax_pu[ren_i, :])
                 pmax_ts = SingleTimeSeries(; name = "max_active_power", data = pmax_ta, scaling_factor_multiplier = get_max_active_power)
                 PowerSystems.add_time_series!(sys, gen, pmax_ts)
@@ -340,29 +343,29 @@ function add_generators!(sys, data, timestamps, snapshot, config;
     return sys
 end
 
-function add_thermal_generator!(sys, name, available, status, bus, p, pq_nom, pq_max, base_power, op_cost, prime_mover, fuel, p_timearray, q_timearray)
-    var_t = PowerSystems.ThermalStandard(
-        name = name,
-        available = available,
-        status = status,
-        bus = bus,
-        active_power = max(p, 0.0),
-        reactive_power = pq_nom * p,
-        base_power = base_power,
-        rating = 1.0,
-        active_power_limits = (min = 0.0, max = 1.0),
-        reactive_power_limits = (min = -pq_max, max = pq_max),
-        ramp_limits = (up = 1.0, down = 1.0),
-        operation_cost = ThermalGenerationCost(CostCurve(LinearCurve(op_cost)), 0, 0, 0),
-        prime_mover_type = PrimeMovers[prime_mover][1],
-        fuel = ThermalFuels[fuel][1],
-    )
-    p_ts = SingleTimeSeries(; name = "active_power", data = p_timearray, scaling_factor_multiplier = get_max_active_power)
-    q_ts = SingleTimeSeries(; name = "reactive_power", data = q_timearray, scaling_factor_multiplier = get_max_active_power)
-    PowerSystems.add_component!(sys, var_t)
-    PowerSystems.add_time_series!(sys, var_t, p_ts)
-    PowerSystems.add_time_series!(sys, var_t, q_ts)
-end
+# function add_thermal_generator!(sys, name, available, status, bus, p, pq_nom, pq_max, base_power, op_cost, prime_mover, fuel, p_timearray, q_timearray)
+#     var_t = PowerSystems.ThermalStandard(
+#         name = name,
+#         available = available,
+#         status = status,
+#         bus = bus,
+#         active_power = max(p, 0.0),
+#         reactive_power = pq_nom * p,
+#         base_power = base_power,
+#         rating = 1.0,
+#         active_power_limits = (min = 0.0, max = 1.0),
+#         reactive_power_limits = (min = -pq_max, max = pq_max),
+#         ramp_limits = (up = 1.0, down = 1.0),
+#         operation_cost = ThermalGenerationCost(CostCurve(LinearCurve(op_cost)), 0, 0, 0),
+#         prime_mover_type = PrimeMovers[prime_mover][1],
+#         fuel = ThermalFuels[fuel][1],
+#     )
+#     p_ts = SingleTimeSeries(; name = "active_power", data = p_timearray, scaling_factor_multiplier = get_max_active_power)
+#     q_ts = SingleTimeSeries(; name = "reactive_power", data = q_timearray, scaling_factor_multiplier = get_max_active_power)
+#     PowerSystems.add_component!(sys, var_t)
+#     PowerSystems.add_time_series!(sys, var_t, p_ts)
+#     PowerSystems.add_time_series!(sys, var_t, q_ts)
+# end
 
 function add_thermal_generator!(sys, name, available, status, bus, p, pq_nom, pq_max, base_power, op_cost, prime_mover, fuel)
     var_t = PowerSystems.ThermalStandard(
@@ -483,7 +486,9 @@ end
 # end
 
 # Add storages (preprocessing + dispatch)
-function add_storages!(sys, data, timestamps, snapshot, config)
+
+function add_storages!(sys, data, timestamps, snapshot, config;
+    x_connection=0.1, transformer_base_MVA=2000)
     prefix = "storage_units_"
     tj = snapshot
     names = get_nc_var(data, prefix * "i")
@@ -497,12 +502,42 @@ function add_storages!(sys, data, timestamps, snapshot, config)
     cap_v = get_nc_var(data, prefix * "max_hours")
     p_t = get_nc_var(data, prefix * "t_p_set")
     e_t = get_nc_var(data, prefix * "t_state_of_charge")
+    pmax_pu = min.(1,e_t)
     eff_dispatch = get_nc_var(data, prefix * "efficiency_dispatch")
     eff_store = get_nc_var(data, prefix * "efficiency_store")
     pt_ts = p_t ./ base_powerV
+    pt_gen = max.(pt_ts,0)
+    pt_store = -min.(pt_ts,0)
+    # Precompute split time series for all storages
+    # gen_timearrays = Vector{TimeArray}(undef, n)
+    # pump_timearrays = Vector{TimeArray}(undef, n)
+    # for i in 1:n
+    #     p_timearray = TimeArray(timestamps, pt_ts[i, :])
+    #     gen_p = max.(p_timearray.values, 0.0)
+    #     pump_p = abs.(min.(p_timearray.values, 0.0))
+    #     gen_timearrays[i] = TimeArray(p_timearray.timestamp, gen_p)
+    #     pump_timearrays[i] = TimeArray(p_timearray.timestamp, pump_p)
+    # end
 
     for i in 1:n
-        bi = PowerSystems.get_bus(sys, bus_name[i])
+        b_grid = PowerSystems.get_bus(sys, bus_name[i])
+        # Change original bus to PQ type
+        b_grid.bustype = PowerSystems.ACBusTypes.PQ
+        # Create new PV bus for storage connection
+        b_stor, _ = split_bus!(sys, b_grid;
+            suffix="_stor_" * carrier[i],
+            base_voltage=PowerSystems.get_base_voltage(b_grid),
+            area=PowerSystems.get_area(b_grid),
+            x_connection=x_connection,
+            transformer_base_MVA=transformer_base_MVA,
+            rating=base_powerV[i],
+            N_inc=N_inc_st+i,
+        )
+        if pt_ts[i, tj]>1
+            b_stor.bustype = PowerSystems.ACBusTypes.PV
+        else
+            b_stor.bustype = PowerSystems.ACBusTypes.PQ 
+        end   
         ci = carrier[i]
         name_i = names[i]
         config_j = config[config.pypsa_comp .== ci, :]
@@ -512,21 +547,65 @@ function add_storages!(sys, data, timestamps, snapshot, config)
         comp = config_j.component[1]
         pq_max = config_j.pq_max[1]
         pq_nom = config_j.pq_nom[1]
-        p_timearray = TimeArray(timestamps, pt_ts[i, :])
-        q_timearray = TimeArray(timestamps, pq_nom .* pt_ts[i, :])
+        pg_timearray = TimeArray(timestamps, pt_gen[i, :])
+        qg_timearray = TimeArray(timestamps, pq_nom .* pt_gen[i, :])
 
+        ps_timearray = TimeArray(timestamps, pt_store[i, :])
+        qs_timearray = TimeArray(timestamps, pq_nom .* pt_store[i, :])
+
+
+        #TODO the scaling factors be set to 1.0 ?
+        pg_ts = SingleTimeSeries(; name = "active_power", data = pg_timearray, scaling_factor_multiplier = get_max_active_power)
+        qg_ts = SingleTimeSeries(; name = "reactive_power", data = qg_timearray, scaling_factor_multiplier = get_max_active_power)
+        ps_ts = SingleTimeSeries(; name = "active_power", data = ps_timearray, scaling_factor_multiplier = get_max_active_power)
+        qs_ts = SingleTimeSeries(; name = "reactive_power", data = qs_timearray, scaling_factor_multiplier = get_max_active_power)
         if comp == "HydroEnergyReservoir"
             ren_i = findfirst(isequal(name_i), renew_index)
-            add_hydro_energy_reservoir!(
-                sys, name_i, available[i], bi, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], cap_v[i],
-                config_j.prime_mover_type[1], inflow_v, ren_i, e_t, i, tj, eff_dispatch[i], p_timearray, q_timearray
-            )
+            stor = add_hydro_energy_reservoir!(
+                sys, name_i, available[i], b_stor, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], cap_v[i],
+                config_j.prime_mover_type[1], inflow_v, ren_i, e_t, i, tj, eff_dispatch[i]
+            )            # Add time series
+
+            PowerSystems.add_time_series!(sys, stor, pg_ts)
+            PowerSystems.add_time_series!(sys, stor, qg_ts)
         elseif comp == "HydroPumpedStorage"
-            print(p_timearray)
-            add_hydro_pumped_storage!(
-                sys, name_i, available[i], bi, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], cap_v[i],
-                config_j.prime_mover_type[1], eff_dispatch[i], eff_store[i], e_t, i, tj, p_timearray, q_timearray
+            # Use precomputed split time series
+            # gen_timearray = gen_timearrays[i]
+            # pump_timearray = pump_timearrays[i]
+            # gen_p = gen_timearray.values
+            # pump_p = pump_timearray.values
+
+            stor, load = add_hydro_pumped_storage!(
+                sys, name_i, available[i], b_stor, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], cap_v[i],
+                config_j.prime_mover_type[1], eff_dispatch[i], eff_store[i], e_t, i, tj
             )
+            # Time series for generator
+            # p_ts = SingleTimeSeries(
+            #     name = "active_power",
+            #     data = gen_timearray,
+            #     scaling_factor_multiplier = get_max_active_power,
+            # )
+            # q_ts = SingleTimeSeries(
+            #     name = "reactive_power",
+            #     data = TimeArray(gen_timearray.timestamp, pq_nom .* gen_p),
+            #     scaling_factor_multiplier = get_max_active_power,
+            # )
+            # Time series for load (pumping)
+            # p_pump_ts = SingleTimeSeries(
+            #     name = "active_power",
+            #     data = pump_timearray,
+            #     scaling_factor_multiplier = get_max_active_power,
+            # )
+            # q_pump_ts = SingleTimeSeries(
+            #     name = "reactive_power",
+            #     data = TimeArray(pump_timearray.timestamp, pq_nom .* pump_p),
+            #     scaling_factor_multiplier = get_max_active_power,
+            # )
+            PowerSystems.add_time_series!(sys, stor, pg_ts)
+            PowerSystems.add_time_series!(sys, stor, qg_ts)
+            
+            PowerSystems.add_time_series!(sys, load, ps_ts)
+            PowerSystems.add_time_series!(sys, load, qs_ts)
         end
     end
     return sys
@@ -534,7 +613,7 @@ end
 
 function add_hydro_energy_reservoir!(
     sys, name, available, bus, p, pq_nom, pq_max, base_power, cap, prime_mover,
-    inflow_v, ren_i, e_t, i, tj, eff_dispatch, p_timearray, q_timearray
+    inflow_v, ren_i, e_t, i, tj, eff_dispatch
 )
     var_t = PowerSystems.HydroEnergyReservoir(
         name = name,
@@ -556,33 +635,19 @@ function add_hydro_energy_reservoir!(
         conversion_factor = eff_dispatch,
         status = true,
     )
-    p_ts = SingleTimeSeries(; name = "active_power", data = p_timearray, scaling_factor_multiplier = get_max_active_power)
-    q_ts = SingleTimeSeries(; name = "reactive_power", data = q_timearray, scaling_factor_multiplier = get_max_active_power)
     PowerSystems.add_component!(sys, var_t)
-    PowerSystems.add_time_series!(sys, var_t, p_ts)
-    PowerSystems.add_time_series!(sys, var_t, q_ts)
+    return var_t
 end
-
 function add_hydro_pumped_storage!(
     sys, name, available, bus, p, pq_nom, pq_max, base_power, cap, prime_mover,
-    eff_dispatch, eff_store, e_t, i, tj, p_timearray, q_timearray
-)
-    # Split p_timearray into generation and pumping (load) time series
-    gen_p = max.(p_timearray.values, 0.0)
-    pump_p = abs.(min.(p_timearray.values, 0.0))
-
-    # Generation time series (positive values only)
-    gen_timearray = TimeArray(p_timearray.timestamp, gen_p)
-    # Pumping time series (absolute value of negative values only)
-    pump_timearray = TimeArray(p_timearray.timestamp, pump_p)
-
-    # HydroDispatch generator (generation)
+    eff_dispatch, eff_store, e_t, i, tj
+)   
     var_t = PowerSystems.HydroDispatch(
         name = name,
         available = available,
         bus = bus,
-        active_power = gen_p[tj],
-        reactive_power = pq_nom * gen_p[tj],
+        active_power = max(p,0),
+        reactive_power = pq_nom * max(p,0),
         base_power = base_power,
         rating = 1.0,
         active_power_limits = (min = 0.0, max = 1.0),
@@ -591,51 +656,175 @@ function add_hydro_pumped_storage!(
         time_limits = (up = 0.0, down = 0.0),
         prime_mover_type = PrimeMovers.HY,
     )
-
-    # PowerLoad (pumping)
+    #TODO change the load to an InterruptiblePowerLoad : consider the state of charge and capacity to calculate the maximum active power time series
     var_loadt = PowerSystems.PowerLoad(
         name = name * "_pump",
         available = true,
         bus = bus,
-        active_power = pump_p[tj],
-        reactive_power = pq_nom * pump_p[tj],
+        active_power = max(-p,0), # Will be set by time series
+        reactive_power = 0.0,
         base_power = base_power,
         max_active_power = 1,
         max_reactive_power = pq_max,
     )
 
-    # Time series for generator
-    p_ts = SingleTimeSeries(
-        name = "active_power",
-        data = gen_timearray,
-        scaling_factor_multiplier = get_max_active_power,
-    )
-    q_ts = SingleTimeSeries(
-        name = "reactive_power",
-        data = TimeArray(gen_timearray.timestamp, pq_nom .* gen_p),
-        scaling_factor_multiplier = get_max_active_power,
-    )
-
-    # Time series for load (pumping)
-    p_pump_ts = SingleTimeSeries(
-        name = "active_power",
-        data = pump_timearray,
-        scaling_factor_multiplier = get_max_active_power,
-    )
-    q_pump_ts = SingleTimeSeries(
-        name = "reactive_power",
-        data = TimeArray(pump_timearray.timestamp, pq_nom .* pump_p),
-        scaling_factor_multiplier = get_max_active_power,
-    )
-
     PowerSystems.add_component!(sys, var_t)
-    PowerSystems.add_time_series!(sys, var_t, p_ts)
-    PowerSystems.add_time_series!(sys, var_t, q_ts)
-
     PowerSystems.add_component!(sys, var_loadt)
-    PowerSystems.add_time_series!(sys, var_loadt, p_pump_ts)
-    PowerSystems.add_time_series!(sys, var_loadt, q_pump_ts)
+    return var_t, var_loadt
 end
+# function add_storages!(sys, data, timestamps, snapshot, config)
+#     prefix = "storage_units_"
+#     tj = snapshot
+#     names = get_nc_var(data, prefix * "i")
+#     n = length(names)
+#     available = get_nc_var(data, prefix * "active", fill(true, n))
+#     bus_name = get_nc_var(data, prefix * "bus")
+#     carrier = get_nc_var(data, prefix * "carrier")
+#     inflow_v = get_nc_var(data, prefix * "t_inflow")
+#     renew_index = get_nc_var(data, prefix * "t_inflow_i")
+#     base_powerV = get_nc_var(data, prefix * "p_nom")
+#     cap_v = get_nc_var(data, prefix * "max_hours")
+#     p_t = get_nc_var(data, prefix * "t_p_set")
+#     e_t = get_nc_var(data, prefix * "t_state_of_charge")
+#     eff_dispatch = get_nc_var(data, prefix * "efficiency_dispatch")
+#     eff_store = get_nc_var(data, prefix * "efficiency_store")
+#     pt_ts = p_t ./ base_powerV
+
+#     for i in 1:n
+#         bi = PowerSystems.get_bus(sys, bus_name[i])
+#         ci = carrier[i]
+#         name_i = names[i]
+#         config_j = config[config.pypsa_comp .== ci, :]
+#         if isempty(config_j)
+#             continue
+#         end
+#         comp = config_j.component[1]
+#         pq_max = config_j.pq_max[1]
+#         pq_nom = config_j.pq_nom[1]
+#         p_timearray = TimeArray(timestamps, pt_ts[i, :])
+#         q_timearray = TimeArray(timestamps, pq_nom .* pt_ts[i, :])
+
+#         if comp == "HydroEnergyReservoir"
+#             ren_i = findfirst(isequal(name_i), renew_index)
+#             add_hydro_energy_reservoir!(
+#                 sys, name_i, available[i], bi, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], cap_v[i],
+#                 config_j.prime_mover_type[1], inflow_v, ren_i, e_t, i, tj, eff_dispatch[i], p_timearray, q_timearray
+#             )
+#         elseif comp == "HydroPumpedStorage"
+#             print(p_timearray)
+#             add_hydro_pumped_storage!(
+#                 sys, name_i, available[i], bi, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], cap_v[i],
+#                 config_j.prime_mover_type[1], eff_dispatch[i], eff_store[i], e_t, i, tj, p_timearray, q_timearray
+#             )
+#         end
+#     end
+#     return sys
+# end
+
+# function add_hydro_energy_reservoir!(
+#     sys, name, available, bus, p, pq_nom, pq_max, base_power, cap, prime_mover,
+#     inflow_v, ren_i, e_t, i, tj, eff_dispatch, p_timearray, q_timearray
+# )
+#     var_t = PowerSystems.HydroEnergyReservoir(
+#         name = name,
+#         available = available,
+#         bus = bus,
+#         active_power = max(p, 0),
+#         reactive_power = pq_nom * p,
+#         base_power = base_power,
+#         rating = 1.0,
+#         storage_capacity = cap,
+#         active_power_limits = (min = 0.0, max = 1.0),
+#         reactive_power_limits = (min = -pq_max, max = pq_max),
+#         ramp_limits = (up = 1.0, down = 1.0),
+#         time_limits = (up = 0.0, down = 0.0),
+#         prime_mover_type = PrimeMovers[prime_mover][1],
+#         inflow = isnothing(ren_i) ? 0.0 : inflow_v[ren_i, tj],
+#         initial_storage = e_t[i, tj],
+#         storage_target = abs(e_t[i, tj] - p),
+#         conversion_factor = eff_dispatch,
+#         status = true,
+#     )
+#     p_ts = SingleTimeSeries(; name = "active_power", data = p_timearray, scaling_factor_multiplier = get_max_active_power)
+#     q_ts = SingleTimeSeries(; name = "reactive_power", data = q_timearray, scaling_factor_multiplier = get_max_active_power)
+#     PowerSystems.add_component!(sys, var_t)
+#     PowerSystems.add_time_series!(sys, var_t, p_ts)
+#     PowerSystems.add_time_series!(sys, var_t, q_ts)
+# end
+
+# function add_hydro_pumped_storage!(
+#     sys, name, available, bus, p, pq_nom, pq_max, base_power, cap, prime_mover,
+#     eff_dispatch, eff_store, e_t, i, tj, p_timearray, q_timearray
+# )
+#     # Split p_timearray into generation and pumping (load) time series
+#     gen_p = max.(p_timearray.values, 0.0)
+#     pump_p = abs.(min.(p_timearray.values, 0.0))
+
+#     # Generation time series (positive values only)
+#     gen_timearray = TimeArray(p_timearray.timestamp, gen_p)
+#     # Pumping time series (absolute value of negative values only)
+#     pump_timearray = TimeArray(p_timearray.timestamp, pump_p)
+
+#     # HydroDispatch generator (generation)
+#     var_t = PowerSystems.HydroDispatch(
+#         name = name,
+#         available = available,
+#         bus = bus,
+#         active_power = gen_p[tj],
+#         reactive_power = pq_nom * gen_p[tj],
+#         base_power = base_power,
+#         rating = 1.0,
+#         active_power_limits = (min = 0.0, max = 1.0),
+#         reactive_power_limits = (min = -pq_max, max = pq_max),
+#         ramp_limits = (up = 1.0, down = 1.0),
+#         time_limits = (up = 0.0, down = 0.0),
+#         prime_mover_type = PrimeMovers.HY,
+#     )
+
+#     # PowerLoad (pumping)
+#     var_loadt = PowerSystems.PowerLoad(
+#         name = name * "_pump",
+#         available = true,
+#         bus = bus,
+#         active_power = pump_p[tj],
+#         reactive_power = pq_nom * pump_p[tj],
+#         base_power = base_power,
+#         max_active_power = 1,
+#         max_reactive_power = pq_max,
+#     )
+
+#     # Time series for generator
+#     p_ts = SingleTimeSeries(
+#         name = "active_power",
+#         data = gen_timearray,
+#         scaling_factor_multiplier = get_max_active_power,
+#     )
+#     q_ts = SingleTimeSeries(
+#         name = "reactive_power",
+#         data = TimeArray(gen_timearray.timestamp, pq_nom .* gen_p),
+#         scaling_factor_multiplier = get_max_active_power,
+#     )
+
+#     # Time series for load (pumping)
+#     p_pump_ts = SingleTimeSeries(
+#         name = "active_power",
+#         data = pump_timearray,
+#         scaling_factor_multiplier = get_max_active_power,
+#     )
+#     q_pump_ts = SingleTimeSeries(
+#         name = "reactive_power",
+#         data = TimeArray(pump_timearray.timestamp, pq_nom .* pump_p),
+#         scaling_factor_multiplier = get_max_active_power,
+#     )
+
+#     PowerSystems.add_component!(sys, var_t)
+#     PowerSystems.add_time_series!(sys, var_t, p_ts)
+#     PowerSystems.add_time_series!(sys, var_t, q_ts)
+
+#     PowerSystems.add_component!(sys, var_loadt)
+#     PowerSystems.add_time_series!(sys, var_loadt, p_pump_ts)
+#     PowerSystems.add_time_series!(sys, var_loadt, q_pump_ts)
+# end
 
 """
     convert_system(src_file::String; snapshot=1, x_connection=0.1, power_factor=0.999, transformer_base_MVA=2000, config=DataFrame())
@@ -651,8 +840,8 @@ function convert_system(src_file::String; snapshot=1, x_connection=0.1, power_fa
     sys = add_nc_buses!(sys, data)
     sys = add_nc_lines!(sys, data)
     sys = add_nc_loads!(sys, data, timestamps, snapshot, x_connection, power_factor, transformer_base_MVA)
-    sys = add_generators!(sys, data, timestamps, snapshot, config)
-    # sys = add_storages!(sys, data, timestamps, snapshot, config)
+    sys = add_generators!(sys, data, timestamps, snapshot, config; x_connection=0.1, transformer_base_MVA=2000)
+    sys = add_storages!(sys, data, timestamps, snapshot, config; x_connection=0.1, transformer_base_MVA=2000)
     return sys
 end
 

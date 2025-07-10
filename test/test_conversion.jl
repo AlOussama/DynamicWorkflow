@@ -64,7 +64,7 @@ Basic = BaseMachine(; R = 0.0, Xd_p = 0.2995, eq_p = 1.05)
 
 BaseShaft = SingleMass(; H = 1, D = 2,);
 
-fixed_avr = AVRFixed(; Vf = 1.05, V_ref = 1.05)
+fixed_avr = AVRFixed(; Vf = 1.05, V_ref = 1.05) #TODO change avr
 
 proportional_avr = AVRSimple(; Kv = 1) #  Kv = 5000.0)
 
@@ -261,7 +261,8 @@ inverter = DynamicInverter(
 # vm = bus_sol_ac.Vm
 # [set_magnitude!(ordered_buses[i],vm[i]) for i in 1:length(vm)];
 # [set_magnitude!(b,1.05) for b in pv_buses];
-pert = LoadTrip(0.02,loads[loads_i_sort[end]])
+# pert = LoadTrip(0.02,loads[loads_i_sort[end]])
+pert = LoadTrip(0.02,loads[40])
 sim=Simulation!(ResidualModel,sys,pwd(),(0.0,0.2),pert)
 
 
