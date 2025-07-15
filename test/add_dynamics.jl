@@ -1,70 +1,8 @@
-using Revise
-using DynamicWorkflow
-using PowerSystems
-using Dates
-using TimeSeries
-using Logging
-using PowerSimulationsDynamics
-using PowerFlows
-using Sundials
-using Plots
-# src_net= "data\\de_n5_solved2.nc"
-src_net= "data\\de_n32_solved.nc"
+Basic = BaseMachine(; R = 1, Xd_p = 0.2995, eq_p = 1.05)
 
-# src_net= "data\\de120.nc"
-# src_net= "data\\de40.nc"
+BaseShaft = SingleMass(; H = 5, D = 20,);
 
-# src_net= "data\\81BusGrid.nc"
-# intialization success: 
-# T =1, avr=proportional_avr ==> 1 
-# T =1, avr=fixed_avr ==> 1 
-
-T_vec =  15;# 15 #1154# 3450 # 3457# 1# 2581 # 3457 #success#:4:1
-N=length(T_vec)
-conv = ones(N,1);
-x_transformer= 0.1; # based on the transformer s_nom # based on pypsa assumption
-s_transformer= 2000; # transformer base power 200MVA based on pypsa assumption
-# sys_base = 100;
-
-# x_connection =x_transformer*sys_base/s_transformer;#0.5e-3;#0.5e-3;#0.5e-3;#1e-3;#1e-4;#1e-3;
-# # configure_logging(; console_level = Logging.Error)
-power_factor=0.99;
-
-
-sys = DynamicWorkflow.convert_system(src_net,T_vec,x_transformer,power_factor,s_transformer) # convert the pypsa network to a PowerSystems network
-
-gens = collect(get_components(ThermalStandard,sys)); #get list of convential generators
-gen_nom_bus = zeros(length(sys.bus_numbers)); # initialize series for the generation capacity of the buses 
-gen_act_bus = zeros(length(sys.bus_numbers)); # initialize series for the actual generation at time step t of the buses
-gen_max_bus = zeros(length(sys.bus_numbers)); # initialize series for the maximum generation at time step t of the buses
-
-l = length(sys.bus_numbers);
-[gen_max_bus[get_number(get_bus(x))]+=get_max_active_power(x) for x in gens]; # sum the maximum generation at time step t per bus
-[gen_act_bus[get_number(get_bus(x))]+=get_active_power(x) for x in gens]; # sum the actual generation at time step t per bus 
-[gen_nom_bus[get_number(get_bus(x))]+=get_rating(x) for x in gens];# sum the the rated generation capacity per bus
-[set_bustype!(x,"PQ") for x in collect(get_components(ACBus,sys))]; # set all buses to PQ buses
-
-ind_s = sortperm(gen_act_bus,rev=true); # sort the actual generation vectors in descending order
-pv_buses = collect(get_buses(sys,Set(ind_s[1:20]))); # alternatively 1:l÷3*2
-[set_bustype!(x,"PV") for x in pv_buses]; # set the 22- buses with the highest actural generation as pv buses
-
-
-ind_s = sortperm(gen_max_bus,rev=true); # sort the maximum generation at time step t in descending order
-ref_buses = collect(get_buses(sys,Set(ind_s[1]))); # set the bus with the highest possible generation to a slack bus
-[set_bustype!(x,"REF") for x in ref_buses];
-
-
-loads = collect(get_components(PowerLoad,sys));
-loads_p = [get_active_power(l) for l in loads]; 
-loads_i_sort = sortperm(loads_p,rev=false);
-
-
-
-Basic = BaseMachine(; R = 0.0, Xd_p = 0.2995, eq_p = 1.05)
-
-BaseShaft = SingleMass(; H = 1, D = 2,);
-
-fixed_avr = AVRFixed(; Vf = 1.05, V_ref = 1.05) #TODO change avr
+fixed_avr = AVRFixed(; Vf = 1.0, V_ref = 1.0) #TODO change avr
 
 proportional_avr = AVRSimple(; Kv = 1) #  Kv = 5000.0)
 
@@ -272,44 +210,44 @@ sim=Simulation!(ResidualModel,sys,pwd(),(0.0,0.2),pert)
 sim_Mass=Simulation!(MassMatrixModel,sys,pwd(),(0.0,20.0),pert)
 
 
-small_sig = small_signal_analysis(sim)
-summary_eigenvalues(small_sig)
+# small_sig = small_signal_analysis(sim)
+# summary_eigenvalues(small_sig)
 
 
-small_sig_Mass = small_signal_analysis(sim_Mass)
-summary_eigenvalues(small_sig_Mass)
+# small_sig_Mass = small_signal_analysis(sim_Mass)
+# summary_eigenvalues(small_sig_Mass)
 
-execute!(sim, IDA(), dtmax = 0.02, saveat = 0.02, enable_progress_bar = true)
-results = read_results(sim)
-gens=collect(get_components(Generator,sys));
-gen_names = get_name.(gens);
-# [2,11,23,27,28]
-gen_labels= ["DE0 2 lignite", "DE0 4 biomass",   "DE0 2 biomass", "DE0 3 nuclear", "DE0 0 biomass", "DE0 1 nuclear", "DE0 1 lignite"];#["DE0 0 PHS",  "DE0 3 PHS", "DE0 4 PHS"];
-# gen_labels= gen_names[gen_labels_i];
-# "DE0 4 PHS", "DE0 0 ror", "DE0 3 PHS", "DE0 4 ror", "DE0 1 ror", "DE0 2 PHS", "DE0 3 ror", "DE0 2 onwind", "DE0 2 offwind-dc", "DE0 4 offwind-dc", "DE0 0 solar", "DE0 3 solar", "DE0 1 solar", "DE0 2 offwind-ac", "DE0 3 onwind", "DE0 2 solar", "DE0 4 onwind", "DE0 4 offwind-ac", "DE0 1 onwind", "DE0 0 onwind", "DE0 4 solar", "DE0 0 hydro", "DE0 3 hydro", "DE0 0 nuclear", "DE0 2 lignite", "DE0 4 biomass", "DE0 3 biomass", "DE0 1 coal", "DE0 1 biomass", "DE0 0 CCGT", "DE0 1 CCGT", "DE0 0 coal", "DE0 2 coal", "DE0 2 biomass", "DE0 3 nuclear", "DE0 0 biomass", "DE0 1 nuclear", "DE0 1 lignite", "DE0 4 coal", "DE0 3 coal", "DE0 4 lignite"]
-# ["DE0 0 PHS",  "DE0 2 offwind-dc","DE0 3 hydro", "DE0 0 nuclear", "DE0 2 lignite", "DE0 4 lignite"];
-# angle = [ get_state_series(results, (gen_labels[i], :δ)) for i=1:7];
+# execute!(sim, IDA(), dtmax = 0.02, saveat = 0.02, enable_progress_bar = true)
+# results = read_results(sim)
+# gens=collect(get_components(Generator,sys));
+# gen_names = get_name.(gens);
+# # [2,11,23,27,28]
+# gen_labels= ["DE0 2 lignite", "DE0 4 biomass",   "DE0 2 biomass", "DE0 3 nuclear", "DE0 0 biomass", "DE0 1 nuclear", "DE0 1 lignite"];#["DE0 0 PHS",  "DE0 3 PHS", "DE0 4 PHS"];
+# # gen_labels= gen_names[gen_labels_i];
+# # "DE0 4 PHS", "DE0 0 ror", "DE0 3 PHS", "DE0 4 ror", "DE0 1 ror", "DE0 2 PHS", "DE0 3 ror", "DE0 2 onwind", "DE0 2 offwind-dc", "DE0 4 offwind-dc", "DE0 0 solar", "DE0 3 solar", "DE0 1 solar", "DE0 2 offwind-ac", "DE0 3 onwind", "DE0 2 solar", "DE0 4 onwind", "DE0 4 offwind-ac", "DE0 1 onwind", "DE0 0 onwind", "DE0 4 solar", "DE0 0 hydro", "DE0 3 hydro", "DE0 0 nuclear", "DE0 2 lignite", "DE0 4 biomass", "DE0 3 biomass", "DE0 1 coal", "DE0 1 biomass", "DE0 0 CCGT", "DE0 1 CCGT", "DE0 0 coal", "DE0 2 coal", "DE0 2 biomass", "DE0 3 nuclear", "DE0 0 biomass", "DE0 1 nuclear", "DE0 1 lignite", "DE0 4 coal", "DE0 3 coal", "DE0 4 lignite"]
+# # ["DE0 0 PHS",  "DE0 2 offwind-dc","DE0 3 hydro", "DE0 0 nuclear", "DE0 2 lignite", "DE0 4 lignite"];
+# # angle = [ get_state_series(results, (gen_labels[i], :δ)) for i=1:7];
 
-# freq = [ get_state_series(results, (gen_labels[i], :ω)) for i=1:7];
+# # freq = [ get_state_series(results, (gen_labels[i], :ω)) for i=1:7];
+# # # freq = get_state_series(results, (gen_names[6], :ω));
+# # p_ser = [get_activepower_series(results, gen_labels[i]) for i=1:7];
+
+# # v_mag = [get_voltage_magnitude_series(results,i) for i=1:5];
+
+# angle = [ get_state_series(results, (gen_names[i], :δ)) for i=1:7];
+
+# freq = [ get_state_series(results, (gen_names[i], :ω)) for i=1:7];
 # # freq = get_state_series(results, (gen_names[6], :ω));
-# p_ser = [get_activepower_series(results, gen_labels[i]) for i=1:7];
+# p_ser = [get_activepower_series(results, gen_names[i]) for i=1:7];
 
-# v_mag = [get_voltage_magnitude_series(results,i) for i=1:5];
+# v_mag = [get_voltage_magnitude_series(results,i) for i=1:7];
 
-angle = [ get_state_series(results, (gen_names[i], :δ)) for i=1:7];
+# # plot(angle, xlabel = "time", ylabel = "rotor angle [rad]");
+# # plot(freq, xlabel = "time", ylabel = "frequency [p.u.]", lw=2, label= permutedims(gen_labels))
 
-freq = [ get_state_series(results, (gen_names[i], :ω)) for i=1:7];
-# freq = get_state_series(results, (gen_names[6], :ω));
-p_ser = [get_activepower_series(results, gen_names[i]) for i=1:7];
+# plot(p_ser,lw=2,xlabel = "time in s", ylabel =  "active power in p.u.",fontsize=24)
 
-v_mag = [get_voltage_magnitude_series(results,i) for i=1:7];
+# plot(angle,lw=2,xlabel = "time in s", ylabel =  "angle in rad",fontsize=24, label=permutedims(gen_labels))
 
-# plot(angle, xlabel = "time", ylabel = "rotor angle [rad]");
-# plot(freq, xlabel = "time", ylabel = "frequency [p.u.]", lw=2, label= permutedims(gen_labels))
-
-plot(p_ser,lw=2,xlabel = "time in s", ylabel =  "active power in p.u.",fontsize=24)
-
-plot(angle,lw=2,xlabel = "time in s", ylabel =  "angle in rad",fontsize=24, label=permutedims(gen_labels))
-
-plot(freq,lw=2,xlabel = "time in s", ylabel =  "frequency in p.u.",fontsize=24, label=permutedims(gen_labels))
-# s
+# plot(freq,lw=2,xlabel = "time in s", ylabel =  "frequency in p.u.",fontsize=24, label=permutedims(gen_labels))
+# # s

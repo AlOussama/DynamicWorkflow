@@ -17,6 +17,59 @@ function get_nc_var(data, var::String="buses_i", default = nothing)
     return haskey(data.vars, var) ? NetCDF.readvar(data[var]) : default
 end
 
+
+function get_nc_df(data::NetCDF.NcFile, component::String, snapshot::Int, ts_attributes::Vector{String})
+    comp_vars = filter(var -> startswith(var, component * "_"), keys(data.vars))
+    attrs = filter(var -> !startswith(var, component * "_t_"), comp_vars)
+
+    # Build DataFrame for attributes
+    attr_dict = Dict{String, Any}()
+    for var in attrs
+        attr_name = replace(var, component * "_"=>"")
+        attr_dict[attr_name] = NetCDF.readvar(data[var])
+    end
+    attr_df = DataFrame(attr_dict)
+
+    # Build DataFrame for time series and their index variables
+    # ts_dict = Dict{String, Any}()
+    ts_df=DataFrame()
+    k=0;
+
+    for attr in ts_attributes
+        ts_dict = Dict{String, Any}()
+        ts_matrix_name = component * "_t_" * attr
+        ts_index_name = ts_matrix_name * "_i"
+        if haskey(data.vars, ts_matrix_name) && haskey(data.vars, ts_index_name)
+            ts_matrix = NetCDF.readvar(data[ts_matrix_name])
+            ts_index = NetCDF.readvar(data[ts_index_name])
+            ts_dict["t_"*attr] = ts_matrix[:, snapshot]
+            ts_dict["i"] = ts_index
+        end
+        # If either is missing, skip this attribute
+        if k==0
+            ts_df = DataFrame(ts_dict)
+        else
+            ts_df = outerjoin(ts_df,DataFrame(ts_dict),on=:i)
+        end
+            k= k+1;
+    end
+    # ts_df = innerjoin(ts_df,DataFrame(ts_dict,:auto),on=:i)
+
+    # Join attribute and time series DataFrames on index "i" if present
+    if haskey(attr_dict, "i")
+        joined_df = innerjoin(attr_df, ts_df, on=:i)
+    else
+        joined_df = hcat(attr_df, ts_df)
+    end
+
+    return joined_df
+end
+
+
+# Example usage:
+# ts_attributes = ["p_set", "q_set", "p_max_pu"]
+# gen_df = get_nc_df(data, "generators", snapshot, ts_attributes)
+
 # Open NetCDF file
 function open_cdf(src_file::String)
     NetCDF.open(src_file)
@@ -69,9 +122,10 @@ function add_nc_buses!(sys, data)
     names = get_nc_var(data, "buses_i")
     n = length(names)
     v_nom = get_nc_var(data, "buses_v_nom")
-    control = get_nc_var(data, "buses_control", fill("PV", n))
-    control[control .== "REF"] .= "PV"
-    control[control .== "SLACK"] .= "PV"
+    control = get_nc_var(data, "buses_control", fill("PQ", n))
+    control[control .== "REF"] .= "PQ"
+    control[control .== "SLACK"] .= "PQ"
+    control[control .== "PV"] .= "PQ"
     area = get_nc_var(data, "buses_country", fill("Not Defined", n))
     carrier = get_nc_var(data, "buses_carrier", fill("AC", n))
 
@@ -87,7 +141,7 @@ function add_nc_buses!(sys, data)
             bus = PowerSystems.ACBus(
                 number = i,
                 name = names[i],
-                bustype = bustype,
+                bustype = "PQ",#bustype,
                 angle = 0.0,
                 magnitude = 1.0,
                 area = area_obj,
@@ -263,11 +317,18 @@ function add_generators!(sys, data, timestamps, snapshot, config;
     op_cost = get_nc_var(data, prefix * "marginal_cost")
     renew_index = get_nc_var(data, prefix * "t_p_max_pu_i")
     pmax_pu = get_nc_var(data, prefix * "t_p_max_pu")
+    p_t_index = get_nc_var(data, prefix * "t_p_i")
     p_t = get_nc_var(data, prefix * "t_p_set")
+    p_t_df = DataFrame(index = p_t_index, p = p_t)
     base_powerV = get_nc_var(data, prefix * "p_nom")
     pt_ts = p_t ./ base_powerV
 
     for i in 1:n
+        base_i = base_powerV[i]
+        p_i = pt_ts[i, tj] #* base_powerV[i] / base_i
+        if pt_ts[i,tj]< 1e-2
+            continue 
+        end
         b_grid = PowerSystems.get_bus(sys, bus_name[i])
         # Change original bus to PQ type
         b_grid.bustype = PowerSystems.ACBusTypes.PQ
@@ -298,8 +359,7 @@ function add_generators!(sys, data, timestamps, snapshot, config;
         p_timearray = TimeArray(timestamps, pt_ts[i, :])
         q_timearray = TimeArray(timestamps, pq_nom .* pt_ts[i, :])
         gen_st = abs(pt_ts[i, tj]) > 1e-8
-        base_i = base_powerV[i]
-        p_i = pt_ts[i, tj] * base_powerV[i] / base_i
+
 
         if comp == "ThermalStandard"
             gen = add_thermal_generator!(
@@ -327,7 +387,16 @@ function add_generators!(sys, data, timestamps, snapshot, config;
         elseif comp == "HydroDispatch"
             ren_i = findfirst(isequal(name_i), renew_index)
             gen = add_hydro_dispatch_generator!(
-                sys, name_i, available[i], b_gen, pt_ts[i, tj], pq_nom, pq_max, base_powerV[i], op_cost[i], prime_mover
+                sys; 
+                name = name_i,
+                available = available[i], 
+                bus = b_gen,
+                p = p_i, 
+                pq_nom = pq_nom,
+                pq_max = pq_max,
+                base_power = base_powerV[i],
+                op_cost = op_cost[i],
+                prime_mover = prime_mover
             )
             p_ts = SingleTimeSeries(; name = "active_power", data = p_timearray, scaling_factor_multiplier = get_max_active_power)
             q_ts = SingleTimeSeries(; name = "reactive_power", data = q_timearray, scaling_factor_multiplier = get_max_active_power)
@@ -406,7 +475,7 @@ function add_renewable_generator!(sys, name, available, bus, p, pq_nom, pq_max, 
     return var_t
 end
 
-function add_hydro_dispatch_generator!(sys, name, available, bus, p, pq_nom, pq_max, base_power, op_cost, prime_mover)
+function add_hydro_dispatch_generator!(sys; name, available, bus, p, pq_nom, pq_max, base_power, op_cost, prime_mover)
     var_t = PowerSystems.HydroDispatch(
         name = name,
         available = available,
@@ -520,6 +589,12 @@ function add_storages!(sys, data, timestamps, snapshot, config;
     # end
 
     for i in 1:n
+        base_i = base_powerV[i]
+        p_i = pt_ts[i, tj] * base_powerV[i] / base_i
+        if pt_ts[i,tj]< 1e-2
+            continue 
+        end
+        # b_grid = PowerSystems.get_bus(sys, bus_name[i])
         b_grid = PowerSystems.get_bus(sys, bus_name[i])
         # Change original bus to PQ type
         b_grid.bustype = PowerSystems.ACBusTypes.PQ
