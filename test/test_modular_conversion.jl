@@ -11,7 +11,8 @@ const PF=PowerFlows
 # using Pypsa2PS
 
 # Path to your pypsa NetCDF file and config file
-nc_file = "data\\de_n32_solved.nc"              # Adjust path as needed
+# nc_file = "data\\de_n32_solved.nc"              # Adjust path as needed
+nc_file = "data\\81BusGrid.nc"              # Adjust path as needed
 config_file = "mapping_config.csv"                # Adjust path as needed
 
 # Read configuration DataFrame
@@ -48,13 +49,13 @@ pl = [get_active_power(x) for x in loads];
 # @test isapprox(sum(pg),sum(pl))
 
 pg_nom = [get_rating(x)*get_available(x) for x in gens];
-# ig_max = argmax(pg_nom);
-# g_slack = gens[ig_max];
-# b_slack = get_bus(g_slack);
-# get_bus_numbers
-# set_bustype!(b_slack,"REF")
+ig_max = argmax(pg_nom);
+g_slack = gens[ig_max];
+b_slack = get_bus(g_slack);
+get_bus_numbers
+set_bustype!(b_slack,"REF")
 
-# pf_res = PF.solve_powerflow(ACPowerFlow(check_reactive_power_limits=true),sys)
-# fl_n = [get_active_power_flow(x)/get_rating(x) for x in lines];
-# pf_res_bus = pf_res["bus_results"]
-# histogram(pf_res_bus.Vm,nbins=50)
+pf_res = PF.solve_powerflow(ACPowerFlow(check_reactive_power_limits=true),sys)
+fl_n = [get_active_power_flow(x)/get_rating(x) for x in lines];
+pf_res_bus = pf_res["bus_results"]
+histogram(pf_res_bus.Vm,nbins=50)

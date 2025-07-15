@@ -80,40 +80,45 @@ create_sys(base_power::Float64=BASE_MVA, freq::Float64=FREQ0) = PowerSystems.Sys
 
 # General split bus and transformer function
 function split_bus!(sys, orig_bus; suffix="", base_voltage=nothing, area=nothing, x_connection=0.01, transformer_base_MVA=2000, rating=1.0,N_inc=1e6)
+
     area = isnothing(area) ? PowerSystems.get_area(orig_bus) : area
     base_voltage = isnothing(base_voltage) ? PowerSystems.get_base_voltage(orig_bus) : base_voltage
+    new_bus = get_bus(sys,PowerSystems.get_name(orig_bus) * suffix);
+    if isnothing(new_bus)
+        new_bus = PowerSystems.ACBus(
+            number = N_inc + 1e3*PowerSystems.get_number(orig_bus),
+            name = PowerSystems.get_name(orig_bus) * suffix,
+            bustype = PowerSystems.ACBusTypes.PQ,
+            angle = 0.0,
+            magnitude = 1.0,
+            area = area,
+            voltage_limits = (min = 0.9, max = 1.1),
+            base_voltage = base_voltage,
+        )
+        PowerSystems.add_component!(sys, new_bus)
 
-    new_bus = PowerSystems.ACBus(
-        number = N_inc + 1e3*PowerSystems.get_number(orig_bus),
-        name = PowerSystems.get_name(orig_bus) * suffix,
-        bustype = PowerSystems.ACBusTypes.PQ,
-        angle = 0.0,
-        magnitude = 1.0,
-        area = area,
-        voltage_limits = (min = 0.9, max = 1.1),
-        base_voltage = base_voltage,
-    )
-    PowerSystems.add_component!(sys, new_bus)
+        n_parallel_transformer = max(1, rating / transformer_base_MVA)
+        x_tr = x_connection / n_parallel_transformer
+        x_tr_pu = x_tr * BASE_MVA / transformer_base_MVA
+        x_l = x_tr_pu
+        rating_l = n_parallel_transformer * transformer_base_MVA / BASE_MVA
 
-    n_parallel_transformer = max(1, rating / transformer_base_MVA)
-    x_tr = x_connection / n_parallel_transformer
-    x_tr_pu = x_tr * BASE_MVA / transformer_base_MVA
-    x_l = x_tr_pu
-    rating_l = n_parallel_transformer * transformer_base_MVA / BASE_MVA
-
-    var_t = PowerSystems.TapTransformer(
-        tap = 1.0,
-        name = PowerSystems.get_name(orig_bus) * suffix * "_connection",
-        available = true,
-        active_power_flow = 0,
-        reactive_power_flow = 0,
-        arc = PowerSystems.Arc(from = orig_bus, to = new_bus),
-        x = x_l,
-        r = x_l / 50,
-        primary_shunt = 0.0,
-        rating = rating_l,
-    )
-    PowerSystems.add_component!(sys, var_t)
+        var_t = PowerSystems.TapTransformer(
+            tap = 1.0,
+            name = PowerSystems.get_name(orig_bus) * suffix * "_connection",
+            available = true,
+            active_power_flow = 0,
+            reactive_power_flow = 0,
+            arc = PowerSystems.Arc(from = orig_bus, to = new_bus),
+            x = x_l,
+            r = x_l / 50,
+            primary_shunt = 0.0,
+            rating = rating_l,
+        )
+        PowerSystems.add_component!(sys, var_t)
+    else 
+        var_t = get_component(TapTransformer,sys,PowerSystems.get_name(orig_bus) * suffix * "_connection")
+    end
     return new_bus, var_t
 end
 
@@ -319,7 +324,7 @@ function add_generators!(sys, data, timestamps, snapshot, config;
     pmax_pu = get_nc_var(data, prefix * "t_p_max_pu")
     p_t_index = get_nc_var(data, prefix * "t_p_i")
     p_t = get_nc_var(data, prefix * "t_p_set")
-    p_t_df = DataFrame(index = p_t_index, p = p_t)
+    # p_t_df = DataFrame(index = p_t_index, p = p_t)
     base_powerV = get_nc_var(data, prefix * "p_nom")
     pt_ts = p_t ./ base_powerV
 
